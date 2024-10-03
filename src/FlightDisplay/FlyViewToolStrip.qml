@@ -19,6 +19,10 @@ ToolStrip {
 
     signal displayPreFlightChecklist
 
+    //Added by DST
+    property alias flyViewToolStripActionList:flyViewToolStripActionList
+    //
+
     FlyViewToolStripActionList {
         id: flyViewToolStripActionList
 

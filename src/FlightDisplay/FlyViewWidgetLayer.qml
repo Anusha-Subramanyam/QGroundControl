@@ -48,6 +48,11 @@ Item {
     property real   _rightPanelWidth:       ScreenTools.defaultFontPixelWidth * 30
     property alias  _gripperMenu:           gripperOptions
 
+    //Added by DST
+    property alias rightToolStrip: toolStrip
+    property alias instrumentPanel: instrumentPanel
+    //
+
     QGCToolInsets {
         id:                     _totalToolInsets
         leftEdgeTopInset:       toolStrip.leftEdgeTopInset

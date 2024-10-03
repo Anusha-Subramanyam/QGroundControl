@@ -8,6 +8,8 @@
 ################################################################################
 
 QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in makefiles
+QMAKE_CXXFLAGS += /Wv:18
+LIBS += -lcrypto
 
 # These are disabled until proven correct
 DEFINES += QGC_GST_TAISYNC_DISABLED

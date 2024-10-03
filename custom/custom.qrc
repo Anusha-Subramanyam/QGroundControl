@@ -1,0 +1,61 @@
+<RCC>
+    <qresource prefix="/custom/img">
+        <file alias="altitude.svg">res/Images/altitude.svg</file>
+        <file alias="attitude_crosshair.svg">res/Images/attitude_crosshair.svg</file>
+        <file alias="attitude_dial.svg">res/Images/attitude_dial.svg</file>
+        <file alias="attitude_pointer.svg">res/Images/attitude_pointer.svg</file>
+        <file alias="chronometer.svg">res/Images/chronometer.svg</file>
+        <file alias="compass_needle.svg">res/Images/compass_needle.svg</file>
+        <file alias="compass_pointer.svg">res/Images/compass_pointer.svg</file>
+        <file alias="distance.svg">res/Images/distance.svg</file>
+        <file alias="horizontal_speed.svg">res/Images/horizontal_speed.svg</file>
+        <file alias="microSD.svg">res/Images/microSD.svg</file>
+        <file alias="odometer.svg">res/Images/odometer.svg</file>
+        <file alias="vertical_speed.svg">res/Images/vertical_speed.svg</file>
+        <file alias="CustomAppIcon.png">res/Images/CustomAppIcon.png</file>
+        <file alias="ActiveUserIcn.png">res/Images/ActiveUserIcn.png</file>
+        <file alias="AddRole.png">res/Images/AddRole.png</file>
+        <file alias="AddUser.png">res/Images/AddUser.png</file>
+        <file alias="Background.png">res/Images/Background.png</file>
+        <file alias="DeleteIcn.svg">res/Images/DeleteIcn.svg</file>
+        <file alias="HidePassword.png">res/Images/HidePassword.png</file>
+        <file alias="InactiveTimeIcn.png">res/Images/InactiveTimeIcn.png</file>
+        <file alias="/InactiveUserIcn.png">res/Images/InactiveUserIcn.png</file>
+        <file alias="logout.png">res/Images/logout.png</file>
+        <file alias="RegisterUser.png">res/Images/RegisterUser.png</file>
+        <file alias="RoleIcn.png">res/Images/RoleIcn.png</file>
+        <file alias="UnhidePassword.png">res/Images/UnhidePassword.png</file>
+        <file alias="UserIcn.png">res/Images/UserIcn.png</file>
+        <file alias="EditIcn.png">res/Images/EditIcn.png</file>
+    </qresource>
+    <qresource prefix="/qmlimages">
+        <file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>
+    </qresource>
+    <qresource prefix="/Custom/Widgets">
+        <file alias="Custom/Widgets/CustomArtificialHorizon.qml">res/Custom/Widgets/CustomArtificialHorizon.qml</file>
+        <file alias="Custom/Widgets/CustomAttitudeWidget.qml">res/Custom/Widgets/CustomAttitudeWidget.qml</file>
+        <file alias="Custom/Widgets/CustomIconButton.qml">res/Custom/Widgets/CustomIconButton.qml</file>
+        <file alias="Custom/Widgets/CustomOnOffSwitch.qml">res/Custom/Widgets/CustomOnOffSwitch.qml</file>
+        <file alias="Custom/Widgets/CustomQuickButton.qml">res/Custom/Widgets/CustomQuickButton.qml</file>
+        <file alias="Custom/Widgets/CustomSignalStrength.qml">res/Custom/Widgets/CustomSignalStrength.qml</file>
+        <file alias="Custom/Widgets/CustomToolBarButton.qml">res/Custom/Widgets/CustomToolBarButton.qml</file>
+        <file alias="Custom/Widgets/CustomVehicleButton.qml">res/Custom/Widgets/CustomVehicleButton.qml</file>
+        <file alias="Custom/Widgets/qmldir">res/Custom/Widgets/qmldir</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file alias="QGroundControl/Controls/MainToolBar.qml">res/CustomMainToolBar.qml</file>
+        <file alias="MainRootWindow.qml">res/CustomMainRootWindow.qml</file>
+        <file alias="AnalyzeView.qml">res/CustomAnalyzeView.qml</file>
+        <file alias="AppSettings.qml">res/CustomAppSettings.qml</file>
+        <file alias="ManageUserAcc.qml">res/ManageUserAcc.qml</file>
+        <file alias="UserLogin.qml">res/UserLogin.qml</file>
+        <file alias="RoleRegistration.qml">res/RoleRegistration.qml</file>
+        <file alias="UserData.qml">res/UserData.qml</file>
+        <file alias="UserInactivityTrack.qml">res/UserInactivityTrack.qml</file>
+        <file alias="UserRegister.qml">res/UserRegister.qml</file>
+        <file alias="UserRolePermMapping.qml">res/UserRolePermMapping.qml</file>
+        <file alias="ActivityLogPage.qml">res/ActivityLogPage.qml</file>
+        <file alias="QGroundControl/FlightDisplay/FlyViewToolStripActionList.qml">res/CustomFlyViewToolStripActionList.qml</file>
+        <file alias="Dashboard.qml">res/Dashboard.qml</file>
+    </qresource>
+</RCC>

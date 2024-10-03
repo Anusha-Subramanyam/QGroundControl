@@ -1,0 +1,33 @@
+{
+    "roles": {
+        "RID1": {
+	    "role": "Manager",
+	    "description": "Manages complete GCS interface functionalities.",
+            "permission": {
+                "FlyView": ["Planning","Telemetry","Dashboard"],
+		"Menu": ["VehicleSetup","AnalyzeTools","AppSettings","ManageUsers"],
+		"AnalyzeTools": ["LogDownLoad","GeoTag","MavConsole","MavInsp","Vibration","ActivityLogs"],
+		"AppSettings": ["General","CommLinks","OfflineMaps","MavLink","RemoteID","Console","Help","MockLink","Debug","PaletteTest"]
+            }
+        },
+        "RID2": {
+ 	    "role": "Pilot",
+            "description": "Handles Mission Execution and operational functionalities.",
+            "permission": {
+                "FlyView": ["Planning","Telemetry"],
+		"Menu": ["VehicleSetup","AnalyzeTools","AppSettings"],
+		"AnalyzeTools": ["LogDownLoad","GeoTag","MavConsole","MavInsp","Vibration"],
+		"AppSettings": ["General","CommLinks","OfflineMaps","MavLink","RemoteID","Console","Help","MockLink","Debug","PaletteTest"]
+            }
+        },
+	"RID3": {
+ 	    "role":"Technician",
+	    "description": "Handles Maintenance and diagnostics functionalities.",
+            "permission": {
+                "FlyView": ["Telemetry"],
+		"Menu": ["AnalyzeTools"],
+		"AnalyzeTools": ["LogDownLoad","GeoTag","MavConsole","MavInsp","Vibration"]
+            }
+        }
+    }
+}
