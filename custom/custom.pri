@@ -59,7 +59,6 @@ QML_IMPORT_PATH += \
 SOURCES += \
     $$PWD/src/CryptoOperations.cpp \
     $$PWD/src/CustomPlugin.cc \
-    $$PWD/src/CustomQGCApplication.cpp \
     $$PWD/src/Database.cpp \
     $$PWD/src/HandleOperations.cpp \
     $$PWD/src/RolePermissionModel.cpp \
@@ -68,7 +67,6 @@ SOURCES += \
 HEADERS += \
     $$PWD/src/CryptoOperations.h \
     $$PWD/src/CustomPlugin.h \
-    $$PWD/src/CustomQGCApplication.h \
     $$PWD/src/Database.h \
     $$PWD/src/HandleOperations.h \
     $$PWD/src/RolePermissionModel.h \

@@ -27,6 +27,7 @@
 class CustomOptions;
 class CustomPlugin;
 class CustomSettings;
+//class CustomVehicleManager;
 
 Q_DECLARE_LOGGING_CATEGORY(CustomLog)
 
@@ -52,6 +53,17 @@ public:
 private:
     //CustomFlyViewOptions* _flyViewOptions = nullptr;
 };
+
+// class CustomVehicleManager : public MultiVehicleManager
+// {
+//     Q_OBJECT
+// public:
+//     CustomVehicleManager(QGCApplication* app, QGCToolbox *toolbox);
+//     ~CustomVehicleManager();
+
+//     Q_INVOKABLE QVariantList storevechiledata(int cnt);
+
+// };
 
 class CustomPlugin : public QGCCorePlugin
 {
@@ -88,6 +100,7 @@ private:
 
 private:
     CustomOptions*  _options = nullptr;
+    //CustomVehicleManager* _customvehicle = nullptr;
     QVariantList    _customSettingsList; // Not to be mixed up with QGCCorePlugin implementation
     QVariantList    _customAnalyzeToolsList;
 };

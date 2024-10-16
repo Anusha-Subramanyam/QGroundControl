@@ -16,9 +16,9 @@ HandleOperations::HandleOperations(QObject *parent)
         handleUserDataFromDB();
     });
 
-    QObject::connect(roleModel,&UserRoleModel::currentSelectedRoleChanged,this,[=](QString role){
+    QObject::connect(roleModel,&UserRoleModel::currentSelectedRoleChanged,this,[=](QString user, QString role, QString usersince){
         getPermissions(role);
-        db->currentUser = roleModel->getCurrentSelectedUser();
+        db->currentUser = user;
         inactTimer.start();
         if(!elapsedTime.isValid()){
             elapsedTime.start();

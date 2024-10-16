@@ -263,9 +263,9 @@ Item {
             height: parent.height*0.75
             anchors.centerIn: parent
             radius: 10
-            border.width: 2
-            border.color: "darkgrey"
-            color: qgcPal.window
+            border.width: 1
+            border.color: qgcPal.buttonHighlight
+            color: qgcPal.toolbarBackground
 
             ScrollView{
                 id:frame
@@ -287,14 +287,14 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: parent.height*.02
-                        color: "lightgrey"
+                        color: qgcPal.text
                         font.bold: true
                     }
                     Rectangle{
                         id: line
                         width:parent.width*.6
-                        height: parent.height*0.0025
-                        color: "lightgrey"
+                        height: parent.width*0.001
+                        color: qgcPal.text
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: headingtxt.bottom
                         anchors.topMargin: parent.height*.013
@@ -310,7 +310,7 @@ Item {
                         color: "transparent"
                         Text {
                             text: "Role ID"
-                            color: "lightgrey"
+                            color: qgcPal.text
                             font.pixelSize: parent.height*.27
                         }
                         TextField{
@@ -319,7 +319,7 @@ Item {
                             width:parent.width
                             anchors.bottom: parent.bottom
                             font.pixelSize: parent.height*.2
-                            color: "lightgrey"
+                            color: qgcPal.text
                             //echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                             //passwordCharacter : "*"
                             placeholderText: "Enter Role ID"
@@ -327,7 +327,7 @@ Item {
                             background: Rectangle {
                                 color: "transparent"
                                 border.width: 1
-                                border.color: "lightgrey"
+                                border.color: qgcPal.buttonHighlight
                                 radius: 4
                             }
                         }
@@ -344,7 +344,7 @@ Item {
 
                         Text {
                             text: "Role Name"
-                            color: "lightgrey"
+                            color: qgcPal.text
                             font.pixelSize: parent.height*.27
                         }
                         TextField{
@@ -353,14 +353,14 @@ Item {
                             width:parent.width
                             anchors.bottom: parent.bottom
                             font.pixelSize: parent.height*.2
-                            color: "lightgrey"
+                            color: qgcPal.text
                             placeholderText: "Enter Role Name"
 
                             background: Rectangle {
                                 id: bgrect
                                 color: "transparent"
                                 border.width: 1
-                                border.color: "lightgrey"
+                                border.color: qgcPal.buttonHighlight
                                 radius: 4
                             }
 
@@ -380,7 +380,7 @@ Item {
 
                         Text {
                             text: "Description"
-                            color: "lightgrey"
+                            color: qgcPal.text
                             font.pixelSize: parent.height*.27
                         }
 
@@ -390,7 +390,7 @@ Item {
                             width:parent.width
                             anchors.bottom: parent.bottom
                             font.pixelSize: parent.height*.2
-                            color: "lightgrey"
+                            color: qgcPal.text
                             //echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                             //passwordCharacter : "*"
                             placeholderText: "Enter Description"
@@ -398,7 +398,7 @@ Item {
                             background: Rectangle {
                                 color: "transparent"
                                 border.width: 1
-                                border.color: "lightgrey"
+                                border.color: qgcPal.buttonHighlight
                                 radius: 4
                             }
                         }
@@ -408,8 +408,8 @@ Item {
                     Rectangle{
                         id: roleperm
                         width: parent.width*.82
-                        height: col1.implicitHeight
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        height: parent.height*.5
+                        anchors.left: roledescpRect.left
                         anchors.top: roledescpRect.bottom
                         anchors.topMargin: parent.height*.013
                         color: "transparent"
@@ -417,15 +417,15 @@ Item {
                         Text {
                             id: permTxt
                             text: "Permissions"
-                            color: "lightgrey"
-                            font.pixelSize: parent.height*.02
+                            color: qgcPal.text
+                            font.pixelSize: parent.height*.033
                         }
 
                         Row {
                             id:col1
                             anchors.top: permTxt.bottom
                             anchors.left: parent.left
-                            anchors.leftMargin: 10
+                            anchors.leftMargin: parent.height*0.04
                             anchors.topMargin: 10
                             spacing: parent.width*0.12
                             Column{
@@ -433,13 +433,13 @@ Item {
                                     id:missid
                                     checked: false
                                     text: qsTr("Mission Planning")
-                                    icon.width: parent.width*0.01
-                                    icon.height: parent.width*0.01
+                                    font.pixelSize: parent.height*0.03
+
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -448,11 +448,14 @@ Item {
                                     id:teleid
                                     checked: false
                                     text: qsTr("Telemetry data")
+                                    font.pixelSize: parent.height*0.03
+
+
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -461,11 +464,13 @@ Item {
                                     id:dashid
                                     checked: false
                                     text: qsTr("Dashboard")
+                                    font.pixelSize: parent.height*0.03
+
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -475,11 +480,13 @@ Item {
                                     id:manaUserid
                                     checked: false
                                     text: qsTr("Manage Users")
+                                    font.pixelSize: parent.height*0.03
+
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -488,11 +495,12 @@ Item {
                                     id:vehiclesetupid
                                     checked: false
                                     text: qsTr("Vehicle Setup")
+                                    font.pixelSize: parent.height*0.03
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -510,7 +518,7 @@ Item {
                                         id: parentBox
                                         text: qsTr("Analyze Tools")
                                         checkState: childGroup.checkState
-
+                                        font.pixelSize: parent.height*0.03
                                         onCheckStateChanged: {
                                             console.log(parentBox.checkState)
                                             console.log(parentBox.checked)
@@ -530,7 +538,7 @@ Item {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -541,12 +549,13 @@ Item {
                                         text: qsTr("LogDownLoad")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -557,12 +566,13 @@ Item {
                                         text: qsTr("GeoTag")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -572,12 +582,13 @@ Item {
                                         text: qsTr("MavConsole")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -587,12 +598,13 @@ Item {
                                         text: qsTr("MavInsp")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -602,12 +614,13 @@ Item {
                                         text: qsTr("Vibration")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -617,12 +630,13 @@ Item {
                                         text: qsTr("ActivityLogs")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
+                                        font.pixelSize: parent.height*0.03
 
                                         contentItem: Text {
                                             text: parent.text
                                             font: parent.font
                                             // opacity: enabled ? 1.0 : 0.3
-                                            color: "white"
+                                            color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
                                             leftPadding: parent.indicator.width + parent.spacing
                                         }
@@ -645,6 +659,7 @@ Item {
                                     id: parentBox2
                                     text: qsTr("Application settings")
                                     checkState: col2childid.checkState
+                                    font.pixelSize: parent.height*0.03
 
                                     // checked: col2child1.checked && col2child2.checked && col2child3.checked && col2child4.checked && col2child5.checked && col2child6.checked && col2child7.checked && col2child8.checked && col2child9.checked && col2child10.checked
                                     //            onCheckedChanged: {
@@ -664,7 +679,7 @@ Item {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -675,12 +690,13 @@ Item {
                                     text: qsTr("General")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -691,12 +707,13 @@ Item {
                                     text: qsTr("CommLinks")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -706,12 +723,13 @@ Item {
                                     text: qsTr("OfflineMaps")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -721,11 +739,12 @@ Item {
                                     text: qsTr("MavLink")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -736,12 +755,13 @@ Item {
                                     text: qsTr("RemoteID")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -751,12 +771,13 @@ Item {
                                     text: qsTr("Console")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -766,12 +787,13 @@ Item {
                                     text: qsTr("Help")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -781,12 +803,13 @@ Item {
                                     text: qsTr("MockLink")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -796,12 +819,13 @@ Item {
                                     text: qsTr("Debug")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -811,12 +835,13 @@ Item {
                                     text: qsTr("PaletteTest")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
+                                    font.pixelSize: parent.height*0.03
 
                                     contentItem: Text {
                                         text: parent.text
                                         font: parent.font
                                         // opacity: enabled ? 1.0 : 0.3
-                                        color: "white"
+                                        color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: parent.indicator.width + parent.spacing
                                     }
@@ -844,14 +869,14 @@ Item {
                             id: errorregtxt
                             text: "Hii"
                             font.pixelSize: parent.width*.04
-                            color: "red"
+                            color: qgcPal.colorRed
                             anchors.centerIn: parent
                         }
                     }
 
                     Rectangle{
                         id: submitbutton
-                        color: "lightgrey"
+                        color: qgcPal.text
                         width: parent.width*0.22
                         height: parent.width*0.05
                         radius: 6
@@ -886,7 +911,7 @@ Item {
 
                 Rectangle{
                     id: closebutton
-                    color: "lightgrey"
+                    color: qgcPal.text
                     width: parent.width*0.22
                     height: parent.width*0.05
                     radius: 6

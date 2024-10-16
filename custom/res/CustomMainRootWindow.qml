@@ -247,8 +247,6 @@ ApplicationWindow {
         }
         viewSwitch(toolbar.flyViewToolbar)
         flightView.visible = true
-        dashboard.visible = false
-        dashboard.enabled = false
     }
 
     function showPlanView() {
@@ -257,11 +255,13 @@ ApplicationWindow {
     }
 
     function showDashboardView(){
-        dashboard.visible = true
-        dashboard.enabled = true
+        menuscreen.visible = true
+        menuscreen.enabled = true
+        menuscreen.defaultDashboardSelect()
         flightView.visible = false
         planView.visible = false
         toolbar.visible = false
+
     }
 
     function showTool(toolTitle, toolSource, toolIcon) {
@@ -330,11 +330,12 @@ ApplicationWindow {
             userlogin.errortxt = ""
             userlogin.passwordHide = true
             flightView.visible = false
-            manageusers.visible = false
-            manageusers.enabled = false
             planView.visible = false
             toolbar.visible = false
             toolDrawer.visible = false
+            menuscreen.visible = false
+            menuscreen.enabled = false
+            //menuscreen.modelTimer.stop()
             //toolSelectDialogComponent.visible = false
             logoutFlag = false
         }else{
@@ -409,18 +410,6 @@ ApplicationWindow {
         id:         toolbar
         height:     ScreenTools.toolbarHeight
         visible:    (!(QGroundControl.videoManager.fullScreen && flightView.visible)) && (!userlogin.visible)
-
-        logoutmousearea.onClicked:{
-            if (!mainWindow.preventViewSwitch()) {
-                mainWindow.showMessageDialog(closeDialogTitle,
-                                             qsTr("Are you sure you want to Logout?"),
-                                             StandardButton.Yes | StandardButton.No,
-                                             function() {
-                                                 logoutFlag = true
-                                                 checkForUnsavedMission()
-                                             })
-            }
-        }
     }
 
     footer: LogReplayStatusBar {
@@ -514,36 +503,36 @@ ApplicationWindow {
 
                     //Added by DST
 
-                    SubMenuButton {
-                        id:                 manageuser
-                        height:             toolSelectDialog._toolButtonHeight
-                        Layout.fillWidth:   true
-                        text:               qsTr("Manage Users")
-                        imageResource:      "/custom/img/logout.png"
-                        imageColor:         qgcPal.text
-                        visible:            manageUserVis
-                        onClicked: {
-                            manageusers.txt1.font.bold = true
-                            manageusers.txt2.font.bold = false
-                            manageusers.txt3.font.bold = false
-                            manageusers.userDataRect.border.color = "lightgrey"
-                            manageusers.userRolePermRect.border.color = qgcPal.windowShadeDark
-                            manageusers.userInactRect.border.color = qgcPal.windowShadeDark
+                    // SubMenuButton {
+                    //     id:                 manageuser
+                    //     height:             toolSelectDialog._toolButtonHeight
+                    //     Layout.fillWidth:   true
+                    //     text:               qsTr("Manage Users")
+                    //     imageResource:      "/custom/img/logout.png"
+                    //     imageColor:         qgcPal.text
+                    //     visible:            manageUserVis
+                    //     onClicked: {
+                    //         manageusers.txt1.font.bold = true
+                    //         manageusers.txt2.font.bold = false
+                    //         manageusers.txt3.font.bold = false
+                    //         manageusers.userDataRect.border.color = "lightgrey"
+                    //         manageusers.userRolePermRect.border.color = qgcPal.windowShadeDark
+                    //         manageusers.userInactRect.border.color = qgcPal.windowShadeDark
 
-                            manageusers.userdetails.visible = true
-                            manageusers.userdetails.enabled = true
-                            manageusers.userroleperm.visible = false
-                            manageusers.userroleperm.enabled = false
-                            manageusers.userinactivity.visible = false
-                            manageusers.userinactivity.enabled = false
+                    //         manageusers.userdetails.visible = true
+                    //         manageusers.userdetails.enabled = true
+                    //         manageusers.userroleperm.visible = false
+                    //         manageusers.userroleperm.enabled = false
+                    //         manageusers.userinactivity.visible = false
+                    //         manageusers.userinactivity.enabled = false
 
-                            manageusers.visible = true
-                            manageusers.enabled = true
-                            flightView.visible = false
-                            toolbar.visible = false
-                            toolSelectDialog.close()
-                        }
-                    }
+                    //         manageusers.visible = true
+                    //         manageusers.enabled = true
+                    //         flightView.visible = false
+                    //         toolbar.visible = false
+                    //         toolSelectDialog.close()
+                    //     }
+                    // }
                     //
 
                     ColumnLayout {
@@ -746,6 +735,39 @@ ApplicationWindow {
         //         }
         //     }
         // }
+    }
+    //Added by DST
+    MenuScreen{
+        id: menuscreen
+        anchors.fill: parent
+        visible: false
+        enabled: false
+
+        onGcsClicked: {
+            menuscreen.visible = false
+            menuscreen.enabled = false
+            showFlyView()
+            toolbar.visible = true
+        }
+
+    }
+
+    //Added by DST
+    ActiveDroneScreen{
+        id: activedronescreen
+        width: parent.width*0.6
+        height: parent.height*0.55
+        anchors.centerIn: parent
+        visible: false
+        enabled: false
+
+        onDroneSelected: {
+            activedronescreen.visible = false
+            activedronescreen.enabled = false
+            menuscreen.opacity = 1
+            menuscreen.enabled = true
+            //menuscreen.modelTimer.start()
+        }
     }
 
     //Added by DST
@@ -967,20 +989,6 @@ ApplicationWindow {
         }
     }
 
-    //-------------------------------------------------------------------------
-    /// DashBoard
-
-    Dashboard{
-        id: dashboard
-        anchors.fill: parent
-        visible: false
-        enabled: false
-
-        bckbuttonmousearea.onClicked: {
-            showFlyView();
-            toolbar.visible = true
-        }
-    }
 
     //-------------------------------------------------------------------------
     /// User Login
@@ -994,17 +1002,23 @@ ApplicationWindow {
         loginbuttonmousearea.onClicked: {
             if(userid != "" && password != ""){
                 if(roleModel.searchUser(userid,password)){
-                    setScreenPermissions("FlyView");
+                    //setScreenPermissions("FlyView");
                     opCls.setSessionID(userid);
-                    showFlyView();
-                    toolbar.visible = true
+                    //showFlyView();
+                    toolbar.visible = false
+
+                    activedronescreen.visible = true
+                    activedronescreen.enabled = true
+                    menuscreen.visible = true
+                    menuscreen.enabled = false
+                    menuscreen.opacity = 0.6
 
                     // toolbar.visible = true
                     // flightView.visible = true
                     //planView.visible = false
                     userlogin.visible = false
                     userlogin.enabled = false
-                    qgcApplication._initStart();
+                    //qgcApplication._initStart();
 
                 }else{
                     errortxt = "Invalid Credentials !"

@@ -156,7 +156,7 @@ public:
     /// @brief Initialize the application for normal application boot. Or in other words we are not going to run
     ///         unit tests. Although public should only be called by main.
     bool _initForNormalAppBoot();
-    Q_INVOKABLE void _initStart();
+    //Q_INVOKABLE void _initStart();
 
     /// @brief Initialize the application for normal application boot. Or in other words we are not going to run
     ///         unit tests. Although public should only be called by main.

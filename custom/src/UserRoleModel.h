@@ -60,11 +60,11 @@ public:
     Q_INVOKABLE QString getCurrentSelectedRole();
     void setCurrentSelectedRole(QString role);
 
-    QString getCurrentSelectedUser();
+    Q_INVOKABLE QString getCurrentSelectedUser();
     void setCurrentSelectedUser(QString user);
 
 signals:
-    void currentSelectedRoleChanged(QString roleId);
+    void currentSelectedRoleChanged(QString user, QString roleId, QString usersince);
     void currentSelectedUserChanged();
 
 private:

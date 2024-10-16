@@ -16,7 +16,6 @@
 #include "MAVLinkLogManager.h"
 
 #include "CustomPlugin.h"
-#include "CustomQGCApplication.h"
 
 #include "MultiVehicleManager.h"
 #include "QGCApplication.h"
@@ -76,6 +75,7 @@ CustomPlugin::CustomPlugin(QGCApplication *app, QGCToolbox* toolbox)
     : QGCCorePlugin(app, toolbox)
 {
     _options = new CustomOptions(this, this);
+    //_customvehicle = new CustomVehicleManager(qgcApp(),toolbox);
     _showAdvancedUI = true;
 }
 
@@ -104,9 +104,9 @@ void CustomPlugin::_addSettingsEntry(const QString& title, const char* qmlFile, 
     // 'this' instance will take ownership on the QmlComponentInfo instance
     _customSettingsList.append(QVariant::fromValue(
         new QmlComponentInfo(title,
-                QUrl::fromUserInput(qmlFile),
-                iconFile == nullptr ? QUrl() : QUrl::fromUserInput(iconFile),
-                this)));
+                             QUrl::fromUserInput(qmlFile),
+                             iconFile == nullptr ? QUrl() : QUrl::fromUserInput(iconFile),
+                             this)));
 }
 
 void CustomPlugin::_addAnalyzeToolsEntry(const QString &title, const char *qmlFile, const char *iconFile)
@@ -246,7 +246,7 @@ void CustomPlugin::paletteOverride(QString colorName, QGCPalette::PaletteColorIn
     else if (colorName == QStringLiteral("buttonHighlight")) {
         colorInfo[QGCPalette::Dark][QGCPalette::ColorGroupEnabled]   = QColor("#07916d");
         colorInfo[QGCPalette::Dark][QGCPalette::ColorGroupDisabled]  = QColor("#495057");
-        colorInfo[QGCPalette::Light][QGCPalette::ColorGroupEnabled]  = QColor("#aeebd0");
+        colorInfo[QGCPalette::Light][QGCPalette::ColorGroupEnabled]  = QColor("#07916d");
         colorInfo[QGCPalette::Light][QGCPalette::ColorGroupDisabled] = QColor("#e4e4e4");
     }
     else if (colorName == QStringLiteral("buttonHighlightText")) {
@@ -402,6 +402,64 @@ QQmlApplicationEngine* CustomPlugin::createQmlApplicationEngine(QObject* parent)
     qmlEngine->rootContext()->setContextProperty("roleModel", userRoleMdl);
     qmlEngine->rootContext()->setContextProperty("rolepermModel", rolePermMdl);
     qmlEngine->rootContext()->setContextProperty("dstDb", gcsDb);
+    //qmlEngine->rootContext()->setContextProperty("customvehicle", _customvehicle);
 
     return qmlEngine;
 }
+
+// CustomVehicleManager::CustomVehicleManager(QGCApplication *app, QGCToolbox *toolbox)
+//     : MultiVehicleManager(app, toolbox)
+// {
+//     qDebug() << "CustomVehicleManager instance created";
+// }
+
+// CustomVehicleManager::~CustomVehicleManager()
+// {
+
+// }
+
+// QVariantList CustomVehicleManager::storevechiledata(int cnt)
+// {
+//     qDebug()<<"In store vehicle data: ";
+//     QVariantList data;
+
+//     //QmlObjectListModel veh = ;
+//     qDebug()<<"LENGTH: "<<cnt;
+//     for(int i=0;i<cnt;i++){
+//         qDebug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//         QList<QObject*>* vehiclesList = vehicles()->objectList();
+//         qDebug()<<"Length: "<<vehiclesList->length();
+//         Vehicle* vehicle = qobject_cast<Vehicle*>(vehiclesList->at(i));
+//         QStringList vechiledata;
+//         if (vehicle) {
+//             vechiledata.append("HI");
+//             vechiledata.append("HELLO");
+//             vechiledata.append("WELCOME");
+//         } else {
+//             qDebug() << "Failed to cast to Vehicle:" << i;
+//         }
+
+//         qDebug("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
+//         //QStringList vechiledata;
+//         // vechiledata.append(vehicle->id());
+//         // vechiledata.append(vehicle->firmwareTypeString());
+//         // vechiledata.append(vehicle->vehicleTypeName());
+//         // data.append(vechiledata);
+
+//         // vechiledata.append(vehicle->id());
+//         // qDebug("cccccccccccccccccccccccccccccccccccccccccccc");
+//         // vechiledata.append("DEMO");
+//         // vechiledata.append("YES");
+//         // vechiledata.append("NO");
+//         // qDebug()<<"S: ";
+//         // vechiledata.append(vehicle->firmwareTypeString());
+//         // qDebug()<<"A: ";
+//         // //vechiledata.append(vehicle->id());
+//         // qDebug()<<"B: ";
+//         qDebug()<<"X: "<<vechiledata;
+//         data.append(vechiledata);
+//         qDebug()<<"Y: "<<data;
+//     }
+//     return data;
+// }

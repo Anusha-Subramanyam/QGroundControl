@@ -70,7 +70,7 @@ signals:
 private slots:
     void _childDirtyChanged         (bool dirty);
     
-private:
+//private:
     // Overrides from QAbstractListModel
     int         rowCount    (const QModelIndex & parent = QModelIndex()) const override;
     QVariant    data        (const QModelIndex & index, int role = Qt::DisplayRole) const override;

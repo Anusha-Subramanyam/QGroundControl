@@ -28,6 +28,8 @@ Item {
     property bool passwordHide: true
     property bool passwordValid: false
 
+    QGCPalette { id: qgcPal }
+
     Rectangle{
         id: mainRect
         anchors.fill: parent
@@ -38,9 +40,9 @@ Item {
             height: parent.height*0.75
             anchors.centerIn: parent
             radius: 10
-            border.width: 4
-            border.color: "darkgrey"
-            color: qgcPal.window
+            border.width: 1
+            border.color: qgcPal.buttonHighlight
+            color: qgcPal.toolbarBackground
 
             Text{
                 id: headingtxt
@@ -49,13 +51,13 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: parent.height*.06
-                color: "lightgrey"
+                color: qgcPal.text
                 font.bold: true
             }
             Rectangle{
                 width:parent.width*.6
                 height: parent.height*0.005
-                color: "lightgrey"
+                color: qgcPal.text
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: headingtxt.bottom
                 anchors.topMargin: parent.height*.02
@@ -71,7 +73,7 @@ Item {
                 color: "transparent"
                 Text {
                     text: "User ID"
-                    color: "lightgrey"
+                    color: qgcPal.text
                     font.pixelSize: parent.height*.26
                 }
                 TextField{
@@ -80,7 +82,7 @@ Item {
                     width:parent.width
                     anchors.bottom: parent.bottom
                     font.pixelSize: parent.height*.2
-                    color: "lightgrey"
+                    color: qgcPal.text
                     //echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                     //passwordCharacter : "*"
                     placeholderText: "Enter User ID"
@@ -88,7 +90,7 @@ Item {
                     background: Rectangle {
                         color: "transparent"
                         border.width: 1
-                        border.color: "lightgrey"
+                        border.color: qgcPal.buttonHighlight
                         radius: 4
                     }
                 }
@@ -104,7 +106,7 @@ Item {
 
                 Text {
                     text: "Password"
-                    color: "lightgrey"
+                    color:qgcPal.text
                     font.pixelSize: parent.height*.26
                 }
                 TextField{
@@ -113,7 +115,7 @@ Item {
                     width:parent.width
                     anchors.bottom: parent.bottom
                     font.pixelSize: parent.height*.2
-                    color: "lightgrey"
+                    color: qgcPal.text
                     echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                     passwordCharacter : "*"
                     placeholderText: "Enter Password"
@@ -122,7 +124,7 @@ Item {
                         id: bgrect
                         color: "transparent"
                         border.width: 1
-                        border.color: "lightgrey"
+                        border.color: qgcPal.buttonHighlight
                         radius: 4
                     }
 
@@ -158,7 +160,7 @@ Item {
                     ColorOverlay{
                         anchors.fill: eyeIcon
                         source: eyeIcon
-                        color:"white"
+                        color:qgcPal.text
                     }
 
                     MouseArea{
@@ -189,7 +191,7 @@ Item {
 
                 Text {
                     text: "User Role"
-                    color: "lightgrey"
+                    color:qgcPal.text
                     font.pixelSize: parent.height*.26
                 }
 
@@ -201,6 +203,9 @@ Item {
                     anchors.bottom: parent.bottom
 
                     model: ListModel {
+                        ListElement{name:"Manager"}
+                        ListElement{name:"Pilot"}
+                        ListElement{name:"Technician"}
                     }
 
                     delegate: ItemDelegate {
@@ -209,11 +214,11 @@ Item {
 
                         contentItem:Rectangle {
                             anchors.fill: parent
-                            color: highlighted ? "black" : "lightgrey"  // Set the background color of the item
+                            color: highlighted ? qgcPal.text : qgcPal.text  // Set the background color of the item
                             Text {
                                 text: modelData
                                 font.bold: false
-                                color: highlighted ? "lightgrey" : "black"
+                                color: highlighted ? qgcPal.windowShade : qgcPal.windowShadeDark
                                 font.pixelSize: parent.height * 0.4
                                 wrapMode: Text.WordWrap
                                 elide: Text.ElideRight
@@ -226,13 +231,20 @@ Item {
 
                     currentIndex: 0
                     indicator: Image{
-                        source: "/custom/img/logout.png"
+                        id:downarrow
+                        source: "/custom/img/downarrow.png"
                         height: parent.height*.8
                         width: parent.height*.8
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: parent.width*.01
                         rotation: rolecombobox.popup.visible ? 180 : 0
+
+                        ColorOverlay{
+                            anchors.fill: downarrow
+                            source: downarrow
+                            color:qgcPal.text
+                        }
 
                         MouseArea{
                             anchors.fill: parent
@@ -246,19 +258,26 @@ Item {
                         anchors.fill:parent
                         width: rolecombobox.width
                         height: rolecombobox.height
-                        color: "white"
-                        border.color: "black"
+                        color: qgcPal.toolbarBackground
+                        border.color: qgcPal.buttonHighlight
                         border.width: 1
                         //radius:
 
                         Image{
-                            source: "/custom/img/ActiveUserIcn.png"
+                            id:downarrow1
+                            source: "/custom/img/downarrow.png"
                             height: parent.height*.8
                             width: parent.height*.8
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
                             anchors.rightMargin: parent.width*.01
                             rotation: rolecombobox.popup.visible ? 180 : 0
+
+                            ColorOverlay{
+                                anchors.fill: downarrow1
+                                source: downarrow1
+                                color:qgcPal.text
+                            }
 
                             MouseArea{
                                 anchors.fill: parent
@@ -275,7 +294,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.leftMargin: parent.width*.05
-                            color: "black"
+                            color: qgcPal.text
                             font.pixelSize: parent.height * 0.4
                             elide: Text.ElideRight
                             wrapMode: Text.WordWrap
@@ -406,18 +425,18 @@ Item {
                     id: errorregtxt
                     text: ""
                     font.pixelSize: parent.width*.04
-                    color: "red"
+                    color:qgcPal.colorRed
                     anchors.centerIn: parent
                 }
             }
 
             Rectangle{
                 id: submitbutton
-                color: "lightgrey"
+                color: qgcPal.text
                 width: parent.width*0.24
                 height: parent.width*0.08
                 radius: 6
-                border.color: qgcPal.windowShade
+                border.color: qgcPal.buttonHighlight
                 border.width: 2
                 anchors.left: parent.horizontalCenter
                 anchors.leftMargin: parent.width*.03
@@ -430,6 +449,7 @@ Item {
                     font.pixelSize: parent.height*0.4
                     anchors.centerIn: parent
                     font.bold: true
+                    color: qgcPal.toolbarBackground
                 }
 
                 MouseArea{
@@ -447,11 +467,11 @@ Item {
 
             Rectangle{
                 id: closebutton
-                color: "lightgrey"
+                color: qgcPal.text
                 width: parent.width*0.24
                 height: parent.width*0.08
                 radius: 6
-                border.color: qgcPal.windowShade
+                border.color:qgcPal.buttonHighlight
                 border.width: 2
                 anchors.right: parent.horizontalCenter
                 anchors.rightMargin: parent.width*.03
@@ -464,6 +484,7 @@ Item {
                     font.pixelSize: parent.height*0.4
                     anchors.centerIn: parent
                     font.bold: true
+                    color: qgcPal.toolbarBackground
                 }
 
                 MouseArea{

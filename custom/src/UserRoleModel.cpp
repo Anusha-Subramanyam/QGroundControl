@@ -163,7 +163,7 @@ bool UserRoleModel::searchUser(const QString &userID, const QString &pwd)
             setData(ind,QDateTime::currentDateTime().toString("yyyyMMddhhmmss"),LastActive);
             setCurrentSelectedRole(data.value("role").toString());
             setCurrentSelectedUser(userID);
-            emit currentSelectedRoleChanged(currentRole);
+            emit currentSelectedRoleChanged(currentUser,currentRole,data.value("usersince").toString());
         }else{
             ;
         }

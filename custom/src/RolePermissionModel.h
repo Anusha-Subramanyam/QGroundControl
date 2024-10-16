@@ -46,7 +46,7 @@ public:
     Q_INVOKABLE void resetModel();
     Q_INVOKABLE int roleExists(QString roleid);
     Q_INVOKABLE QString getRoleParameter(int ind, QString param);
-    int16_t getModelIndex(QString roleid);
+    Q_INVOKABLE int getModelIndex(QString roleid);
 
 private:
     static RolePermissionModel *instance;

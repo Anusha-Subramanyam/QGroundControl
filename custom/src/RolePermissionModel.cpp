@@ -159,7 +159,7 @@ QString RolePermissionModel::getRoleParameter(int ind,QString param)
     return getRoleData(ind).value(param).toString();
 }
 
-int16_t RolePermissionModel::getModelIndex(QString roleid)
+int RolePermissionModel::getModelIndex(QString roleid)
 {
     int row = -1;
     for (int i = 0; i < roleData.size(); ++i) {

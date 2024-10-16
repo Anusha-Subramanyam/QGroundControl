@@ -575,14 +575,14 @@ bool QGCApplication::_initForNormalAppBoot()
     // }
 
     // Now that main window is up check for lost log files
-    connect(this, &QGCApplication::checkForLostLogFiles, toolbox()->mavlinkProtocol(), &MAVLinkProtocol::checkForLostLogFiles);
-    emit checkForLostLogFiles();
+    // connect(this, &QGCApplication::checkForLostLogFiles, toolbox()->mavlinkProtocol(), &MAVLinkProtocol::checkForLostLogFiles);
+    // emit checkForLostLogFiles();
 
     // Load known link configurations
-    toolbox()->linkManager()->loadLinkConfigurationList();
+    // toolbox()->linkManager()->loadLinkConfigurationList();
 
     // Probe for joysticks
-    toolbox()->joystickManager()->init();
+    //toolbox()->joystickManager()->init();
 
     // if (_settingsUpgraded) {
     //     showAppMessage(QString(tr("The format for %1 saved settings has been modified. "
@@ -601,40 +601,40 @@ bool QGCApplication::_initForNormalAppBoot()
     return true;
 }
 
-void QGCApplication::_initStart()
-{
-    QSettings settings;
-    // Safe to show popup error messages now that main window is created
-    UASMessageHandler* msgHandler = qgcApp()->toolbox()->uasMessageHandler();
-    if (msgHandler) {
-        msgHandler->showErrorsInToolbar();
-    }
+// void QGCApplication::_initStart()
+// {
+//     QSettings settings;
+//     // Safe to show popup error messages now that main window is created
+//     UASMessageHandler* msgHandler = qgcApp()->toolbox()->uasMessageHandler();
+//     if (msgHandler) {
+//         msgHandler->showErrorsInToolbar();
+//     }
 
-    // // Now that main window is up check for lost log files
-    // connect(this, &QGCApplication::checkForLostLogFiles, toolbox()->mavlinkProtocol(), &MAVLinkProtocol::checkForLostLogFiles);
-    // emit checkForLostLogFiles();
+//     // // Now that main window is up check for lost log files
+//     // connect(this, &QGCApplication::checkForLostLogFiles, toolbox()->mavlinkProtocol(), &MAVLinkProtocol::checkForLostLogFiles);
+//     // emit checkForLostLogFiles();
 
-    // // Load known link configurations
-    // toolbox()->linkManager()->loadLinkConfigurationList();
+//     // // Load known link configurations
+//     //toolbox()->linkManager()->loadLinkConfigurationList();
 
-    // // Probe for joysticks
-    // toolbox()->joystickManager()->init();
+//     // // Probe for joysticks
+//     //toolbox()->joystickManager()->init();
 
-    if (_settingsUpgraded) {
-        showAppMessage(QString(tr("The format for %1 saved settings has been modified. "
-                                  "Your saved settings have been reset to defaults.")).arg(applicationName()));
-    }
+//     if (_settingsUpgraded) {
+//         showAppMessage(QString(tr("The format for %1 saved settings has been modified. "
+//                                   "Your saved settings have been reset to defaults.")).arg(applicationName()));
+//     }
 
-    // Connect links with flag AutoconnectLink
-    toolbox()->linkManager()->startAutoConnectedLinks();
+//     // Connect links with flag AutoconnectLink
+//     //toolbox()->linkManager()->startAutoConnectedLinks();
 
-    if (getQGCMapEngine()->wasCacheReset()) {
-        showAppMessage(tr("The Offline Map Cache database has been upgraded. "
-                          "Your old map cache sets have been reset."));
-    }
+//     if (getQGCMapEngine()->wasCacheReset()) {
+//         showAppMessage(tr("The Offline Map Cache database has been upgraded. "
+//                           "Your old map cache sets have been reset."));
+//     }
 
-    settings.sync();
-}
+//     settings.sync();
+// }
 
 bool QGCApplication::_initForUnitTests()
 {
@@ -913,7 +913,6 @@ bool QGCApplication::_parseVersionText(const QString& versionString, int& majorV
 
     return false;
 }
-
 
 void QGCApplication::_onGPSConnect()
 {

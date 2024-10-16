@@ -27,6 +27,15 @@
         <file alias="UnhidePassword.png">res/Images/UnhidePassword.png</file>
         <file alias="UserIcn.png">res/Images/UserIcn.png</file>
         <file alias="EditIcn.png">res/Images/EditIcn.png</file>
+        <file alias="commonbackground.png">res/Images/commonbackground.png</file>
+        <file alias="Dashboard.png">res/Images/Dashboard.png</file>
+        <file alias="gcsIcon.png">res/Images/gcsIcon.png</file>
+        <file alias="optionsIcon.png">res/Images/optionsIcon.png</file>
+        <file alias="userprofile.png">res/Images/userprofile.png</file>
+        <file alias="UnderLineIcon.svg">res/Images/UnderLineIcon.svg</file>
+        <file alias="TaraLogo.png">res/Images/TaraLogo.png</file>
+        <file alias="GenerateIcon.png">res/Images/GenerateIcon.png</file>
+        <file alias="downarrow.png">res/Images/downarrow.png</file>
     </qresource>
     <qresource prefix="/qmlimages">
         <file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>
@@ -57,5 +66,7 @@
         <file alias="ActivityLogPage.qml">res/ActivityLogPage.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewToolStripActionList.qml">res/CustomFlyViewToolStripActionList.qml</file>
         <file alias="Dashboard.qml">res/Dashboard.qml</file>
+        <file alias="MenuScreen.qml">res/MenuScreen.qml</file>
+        <file alias="ActiveDroneScreen.qml">res/ActiveDroneScreen.qml</file>
     </qresource>
 </RCC>

@@ -38,8 +38,8 @@ Item {
             anchors.bottomMargin: parent.height*.02
             radius: 10
             border.width: 4
-            border.color: "darkgrey"
-            color: qgcPal.window
+            border.color: qgcPal.buttonHighlight
+            color: qgcPal.toolbarBackground
             visible: true
             enabled: true
 
@@ -50,13 +50,13 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: parent.height*.07
-                color: "lightgrey"
+                color: qgcPal.text
                 font.bold: true
             }
             Rectangle{
                 width:parent.width*.65
-                height: parent.height*0.005
-                color: "lightgrey"
+                height: parent.height*0.004
+                color: qgcPal.text
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: userlogin.bottom
                 anchors.topMargin: parent.height*.03
@@ -72,7 +72,7 @@ Item {
                 color: "transparent"
                 Text {
                     text: "User ID"
-                    color: "lightgrey"
+                    color: qgcPal.text
                     font.pixelSize: parent.height*.26
                 }
                 TextField{
@@ -81,7 +81,7 @@ Item {
                     width:parent.width
                     anchors.bottom: parent.bottom
                     font.pixelSize: parent.height*.2
-                    color: "lightgrey"
+                    color: qgcPal.text
                     //echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                     //passwordCharacter : "*"
                     placeholderText: "Enter User ID"
@@ -89,7 +89,7 @@ Item {
                     background: Rectangle {
                         color: "transparent"
                         border.width: 1
-                        border.color: "lightgrey"
+                        border.color: qgcPal.buttonHighlight
                         radius: 4
                     }
                 }
@@ -106,7 +106,7 @@ Item {
 
                 Text {
                     text: "Password"
-                    color: "lightgrey"
+                    color: qgcPal.text
                     font.pixelSize: parent.height*.26
                 }
                 TextField{
@@ -115,7 +115,7 @@ Item {
                     width:parent.width
                     anchors.bottom: parent.bottom
                     font.pixelSize: parent.height*.2
-                    color: "lightgrey"
+                    color: qgcPal.text
                     echoMode: passwordHide ? TextInput.Password : TextInput.Normal
                     passwordCharacter : "*"
                     placeholderText: "Enter Password"
@@ -123,7 +123,7 @@ Item {
                     background: Rectangle {
                         color: "transparent"
                         border.width: 1
-                        border.color: "lightgrey"
+                        border.color: qgcPal.buttonHighlight
                         radius: 4
                     }
                 }
@@ -139,7 +139,7 @@ Item {
                     ColorOverlay{
                         anchors.fill: eyeIcon
                         source: eyeIcon
-                        color:"white"
+                        color:qgcPal.text
                     }
 
                     MouseArea{
@@ -172,14 +172,14 @@ Item {
                     id: errortxt
                     text: ""
                     font.pixelSize: parent.width*.04
-                    color: "red"
+                    color: qgcPal.colorRed
                     anchors.centerIn: parent
                 }
             }
 
             Rectangle{
                 id: loginbutton
-                color: "lightgrey"
+                color: qgcPal.text
                 width: parent.width*0.24
                 height: parent.width*0.08
                 radius: 6
@@ -195,6 +195,7 @@ Item {
                     font.pixelSize: parent.height*0.4
                     anchors.centerIn: parent
                     font.bold: true
+                    color: qgcPal.toolbarBackground
                 }
 
                 MouseArea{
