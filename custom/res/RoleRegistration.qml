@@ -24,17 +24,17 @@ Item {
     property alias submitbuttontxt: submitbuttontxt
     property alias heading:headingtxt.text
 
-
     property var  maincontainer: []
-    property var flyView: []
     property var menu: []
+    property var gcs: []
     property var  analyzeTools: []
     property var appSetting: []
     property alias missid: missid
     property alias teleid: teleid
-    property alias dashid: dashid
-    property alias manaUserid: manaUserid
+    property alias usersid: usersid
+    property alias rolesid: rolesid
     property alias vehiclesetupid: vehiclesetupid
+    property alias inactid: inactid
     property alias parentBox: parentBox
     property alias col1child1: col1child1
     property alias col1child2: col1child2
@@ -57,27 +57,31 @@ Item {
     property alias flick: flickable.contentY
 
     function editRoleJson(myData){
-        if ("FlyView" in myData) {
-            var flyViewArray = myData.FlyView;
-            if (flyViewArray.includes("Planning")){
-                missid.checked = true
+        uncheckPerm()
+        if ("Menu" in myData) {
+            var menuArray = myData.Menu;
+            if (menuArray.includes("Users")){
+                usersid.checked = true
             }
-            if (flyViewArray.includes("Telemetry")){
-                teleid.checked = true
+            if (menuArray.includes("UserRoles")){
+                rolesid.checked = true
             }
-            if (flyViewArray.includes("Dashboard")){
-                dashid.checked = true
+            if (menuArray.includes("InactivitySettings")){
+                inactid.checked = true
             }
         }
-        if("Menu" in myData){
-            var menuArray = myData.Menu;
-            if(menuArray.includes("ManageUsers")){
-                manaUserid.checked = true
+        if("GCS" in myData){
+            var gcsArray = myData.GCS;
+            if(gcsArray.includes("Planning")){
+                missid.checked = true
             }
-            if(menuArray.includes("VehicleSetup")){
+            if (gcsArray.includes("Telemetry")){
+                teleid.checked = true
+            }
+            if(gcsArray.includes("VehicleSetup")){
                 vehiclesetupid.checked = true
             }
-            if(menuArray.includes("AnalyzeTools")){
+            if(gcsArray.includes("AnalyzeTools")){
                 var analyzeArray = myData.AnalyzeTools;
                 if("AnalyzeTools" in myData){
                     if(analyzeArray.includes("LogDownLoad")){
@@ -100,7 +104,7 @@ Item {
                     }
                 }
             }
-            if(menuArray.includes("AppSettings")){
+            if(gcsArray.includes("AppSettings")){
                 var applicationArray = myData.AppSettings;
                 if("AppSettings" in myData){
                     if(applicationArray.includes("General")){
@@ -139,23 +143,28 @@ Item {
     }
 
     function formRoleJson(){
+        gcs = []
+        menu = []
+        analyzeTools = []
+        appSetting = []
+        menu = ["Dashboard","GCS"]
         if(missid.checked == true){
-            flyView.push("Planning")
+            gcs.push("Planning")
         }
         if(teleid.checked == true){
-            flyView.push("Telemetry")
+            gcs.push("Telemetry")
         }
-        if(dashid.checked == true){
-            flyView.push("Dashboard")
+        if(usersid.checked == true){
+            menu.push("Users")
         }
-        if(manaUserid.checked==true){
-            menu.push("ManageUsers")
+        if(rolesid.checked==true){
+            menu.push("UserRoles")
         }
         if(vehiclesetupid.checked==true){
-            menu.push("VehicleSetup")
+            gcs.push("VehicleSetup")
         }
         if(parentBox.checkState==1 || parentBox.checkState==2){
-            menu.push("AnalyzeTools")
+            gcs.push("AnalyzeTools")
             if(parentBox.checkState==2){
                 analyzeTools.push("LogDownLoad")
                 analyzeTools.push("GeoTag")
@@ -186,8 +195,11 @@ Item {
                 }
             }
         }
+        if(inactid.checked==true){
+            menu.push("InactivitySettings")
+        }
         if(parentBox2.checkState==1 || parentBox2.checkState==2){
-            menu.push("AppSettings")
+            gcs.push("AppSettings")
             if(parentBox2.checkState==2){
                 appSetting.push("General")
                 appSetting.push("CommLinks")
@@ -234,11 +246,12 @@ Item {
                 }
             }
         }
+        maincontainer = []
         maincontainer.push(roleidfield.text)
         maincontainer.push(rolenamefield.text);
         maincontainer.push(descpfield.text);
-        maincontainer.push(flyView);
         maincontainer.push(menu);
+        maincontainer.push(gcs);
         maincontainer.push(analyzeTools);
         maincontainer.push(appSetting);
     }
@@ -246,11 +259,12 @@ Item {
     function uncheckPerm(){
         missid.checked = false
         teleid.checked = false
-        dashid.checked = false
-        manaUserid.checked = false
+        usersid.checked = false
+        rolesid.checked = false
         vehiclesetupid.checked = false
-        parentBox.checkState = 0
-        parentBox2.checkState = 0
+        inactid.checked = false
+        parentBox.checked = false
+        parentBox2.checked = false
     }
 
     Rectangle{
@@ -276,14 +290,14 @@ Item {
 
                 Flickable{
                     id: flickable
-                    contentHeight: parent.height*3
+                    contentHeight: parent.height*1.8
                     width: parent.width
 
 
                     Text{
                         id: headingtxt
                         text: "USER ROLE REGISTRATION"
-                        font.pixelSize: parent.height*.015
+                        font.pixelSize: parent.height*.025
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: parent.height*.02
@@ -293,7 +307,7 @@ Item {
                     Rectangle{
                         id: line
                         width:parent.width*.6
-                        height: parent.width*0.001
+                        height: parent.width*0.0018
                         color: qgcPal.text
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: headingtxt.bottom
@@ -303,7 +317,7 @@ Item {
                     Rectangle{
                         id: roleidRect
                         width: parent.width*.7
-                        height: parent.height*.05
+                        height: parent.height*.08
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: line.bottom
                         anchors.topMargin: parent.height*.013
@@ -311,7 +325,7 @@ Item {
                         Text {
                             text: "Role ID"
                             color: qgcPal.text
-                            font.pixelSize: parent.height*.27
+                            font.pixelSize: parent.height*.3
                         }
                         TextField{
                             id:roleidfield
@@ -336,7 +350,7 @@ Item {
                     Rectangle{
                         id: rolenameRect
                         width: parent.width*.7
-                        height: parent.height*.05
+                        height: parent.height*.08
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: roleidRect.bottom
                         anchors.topMargin: parent.height*.013
@@ -345,7 +359,7 @@ Item {
                         Text {
                             text: "Role Name"
                             color: qgcPal.text
-                            font.pixelSize: parent.height*.27
+                            font.pixelSize: parent.height*.3
                         }
                         TextField{
                             id:rolenamefield
@@ -372,7 +386,7 @@ Item {
                     Rectangle{
                         id: roledescpRect
                         width: parent.width*.7
-                        height: parent.height*.05
+                        height: parent.height*.08
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: rolenameRect.bottom
                         anchors.topMargin: parent.height*.013
@@ -381,7 +395,7 @@ Item {
                         Text {
                             text: "Description"
                             color: qgcPal.text
-                            font.pixelSize: parent.height*.27
+                            font.pixelSize: parent.height*.3
                         }
 
                         TextField{
@@ -408,17 +422,17 @@ Item {
                     Rectangle{
                         id: roleperm
                         width: parent.width*.82
-                        height: parent.height*.5
+                        height: parent.height*.3
                         anchors.left: roledescpRect.left
                         anchors.top: roledescpRect.bottom
-                        anchors.topMargin: parent.height*.013
+                        anchors.topMargin: parent.height*.01
                         color: "transparent"
 
                         Text {
                             id: permTxt
                             text: "Permissions"
                             color: qgcPal.text
-                            font.pixelSize: parent.height*.033
+                            font.pixelSize: parent.height*.08
                         }
 
                         Row {
@@ -427,82 +441,197 @@ Item {
                             anchors.left: parent.left
                             anchors.leftMargin: parent.height*0.04
                             anchors.topMargin: 10
-                            spacing: parent.width*0.12
+                            spacing: parent.width*0.2
                             Column{
                                 CheckBox {
-                                    id:missid
-                                    checked: false
-                                    text: qsTr("Mission Planning")
-                                    font.pixelSize: parent.height*0.03
+                                    id: missid
+                                      text: qsTr("Mission Planning")
+                                      font.pixelSize: roleperm.width*0.025
+                                      checked: false
 
-                                    contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
-                                        color: qgcPal.text
-                                        verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
-                                    }
+                                      indicator: Rectangle {
+                                          id:checkboxrect1
+                                          implicitWidth: roleperm.width*0.04
+                                          implicitHeight:roleperm.width*0.04
+                                          x: missid.leftPadding
+                                          y: parent.height / 2 - height / 2
+                                          radius: 3
+                                          border.color: qgcPal.buttonHighlight
+
+                                          Rectangle {
+                                              id:innerrect
+                                              width:  checkboxrect1.width/2+1
+                                              height:  checkboxrect1.width/2+1
+                                              x: innerrect.width/2 - 1
+                                              y: innerrect.width/2 - 1
+                                              radius: 2
+                                              color: qgcPal.buttonHighlight
+                                              visible: missid.checked
+                                          }
+                                      }
+
+                                      contentItem: Text {
+                                          text: missid.text
+                                          font: missid.font
+                                          // font.pixelSize: missid.width*0.3
+                                          opacity: enabled ? 1.0 : 0.3
+                                          color: qgcPal.text
+                                          verticalAlignment: Text.AlignVCenter
+                                          anchors.left: checkboxrect1.right
+                                          anchors.leftMargin: missid.indicator.width*0.6
+                                      }
                                 }
                                 CheckBox {
                                     id:teleid
-                                    checked: false
                                     text: qsTr("Telemetry data")
-                                    font.pixelSize: parent.height*0.03
+                                    font.pixelSize: roleperm.width*0.025
+                                    checked: false
 
+                                    indicator: Rectangle {
+                                        id:checkboxrect2
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: teleid.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect2
+                                            width:  checkboxrect2.width/2+1
+                                            height:  checkboxrect2.width/2+1
+                                            x: innerrect2.width/2 - 1
+                                            y: innerrect2.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: teleid.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: teleid.text
+                                        font: teleid.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect2.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
-                                    id:dashid
+                                    id:usersid
                                     checked: false
-                                    text: qsTr("Dashboard")
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("User Management")
+                                    font.pixelSize: roleperm.width*0.025
+
+                                    indicator: Rectangle {
+                                       id: checkboxrect3
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: usersid.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect3
+                                            width:  checkboxrect3.width/2 + 1
+                                            height:  checkboxrect3.width/2 + 1
+                                            x: innerrect3.width/2 - 1
+                                            y: innerrect3.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: usersid.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: usersid.text
+                                        font: usersid.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect3.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
 
                                 }
                                 CheckBox {
-                                    id:manaUserid
+                                    id:rolesid
                                     checked: false
-                                    text: qsTr("Manage Users")
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("User Role Management")
+                                    font.pixelSize: roleperm.width*0.025
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect4
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: rolesid.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect4
+                                            width:  checkboxrect4.width/2+1
+                                            height:  checkboxrect4.width/2+1
+                                            x: innerrect4.width/2 - 1
+                                            y: innerrect4.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: rolesid.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: rolesid.text
+                                        font: rolesid.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect4.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:vehiclesetupid
-                                    checked: false
                                     text: qsTr("Vehicle Setup")
-                                    font.pixelSize: parent.height*0.03
+                                    font.pixelSize: roleperm.width*0.025
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect5
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: vehiclesetupid.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect5
+                                            width:  checkboxrect5.width/2+1
+                                            height:  checkboxrect5.width/2+1
+                                            x: innerrect5.width/2 - 1
+                                            y: innerrect5.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: vehiclesetupid.checked
+                                        }
+                                    }
+
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: vehiclesetupid.text
+                                        font: vehiclesetupid.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect5.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
 
@@ -516,129 +645,283 @@ Item {
 
                                     CheckBox {
                                         id: parentBox
-                                        text: qsTr("Analyze Tools")
                                         checkState: childGroup.checkState
-                                        font.pixelSize: parent.height*0.03
-                                        onCheckStateChanged: {
-                                            console.log(parentBox.checkState)
-                                            console.log(parentBox.checked)
-                                            console.log("hiiii.............")
+                                        text: qsTr("Analyze Tools")
+                                        font.pixelSize: roleperm.width*0.025
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect6
+                                            implicitWidth: roleperm.width*0.04
+                                            implicitHeight:roleperm.width*0.04
+                                            x: parentBox.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect6
+                                                width:  checkboxrect6.width/2+1
+                                                height:  checkboxrect6.width/2+1
+                                                x: innerrect6.width/2 - 1
+                                                y: innerrect6.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: parentBox.checked
+                                            }
                                         }
 
-                                        // checked: col1child1.checked && col1child2.checked && col1child3.checked && col1child4.checked && col1child5.checked && col1child6.checked
-                                        //            onCheckedChanged: {
-                                        //                col1child1.checked = checked;
-                                        //                col1child2.checked = checked;
-                                        //                col1child3.checked = checked;
-                                        //                col1child4.checked = checked;
-                                        //                col1child5.checked = checked;
-                                        //                col1child6.checked = checked;
-                                        //            }
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: parentBox.text
+                                            font: parentBox.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect6.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
 
                                     CheckBox {
                                         id:col1child1
-                                        text: qsTr("LogDownLoad")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("LogDownLoad")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect7
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child1.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect7
+                                                width:  checkboxrect7.width/2+1
+                                                height:  checkboxrect7.width/2+1
+                                                x: innerrect7.width/2 - 1
+                                                y: innerrect7.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child1.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child1.text
+                                            font: col1child1.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect7.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
 
                                     CheckBox {
                                         id:col1child2
-                                        text: qsTr("GeoTag")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("GeoTag")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect8
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child2.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect8
+                                                width:  checkboxrect8.width/2+1
+                                                height:  checkboxrect8.width/2+1
+                                                x: innerrect8.width/2 - 1
+                                                y: innerrect8.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child2.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child2.text
+                                            font: col1child2.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect8.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
                                     CheckBox {
                                         id:col1child3
-                                        text: qsTr("MavConsole")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("MavConsole")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect9
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child3.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect9
+                                                width:  checkboxrect9.width/2+1
+                                                height:  checkboxrect9.width/2+1
+                                                x: innerrect9.width/2 - 1
+                                                y: innerrect9.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child3.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child3.text
+                                            font: col1child3.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect9.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
                                     CheckBox {
                                         id:col1child4
-                                        text: qsTr("MavInsp")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("MavInsp")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect10
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child4.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect10
+                                                width:  checkboxrect10.width/2+1
+                                                height:  checkboxrect10.width/2+1
+                                                x: innerrect10.width/2 - 1
+                                                y: innerrect10.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child4.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child4.text
+                                            font: col1child4.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect10.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
                                     CheckBox {
                                         id:col1child5
-                                        text: qsTr("Vibration")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("Vibration")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect11
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child5.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect11
+                                                width:  checkboxrect11.width/2+1
+                                                height:  checkboxrect11.width/2+1
+                                                x: innerrect11.width/2 - 1
+                                                y: innerrect11.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child5.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child5.text
+                                            font: col1child5.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect11.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
                                     CheckBox {
                                         id:col1child6
-                                        text: qsTr("ActivityLogs")
                                         leftPadding: indicator.width
                                         ButtonGroup.group: childGroup
-                                        font.pixelSize: parent.height*0.03
+                                        text: qsTr("ActivityLogs")
+                                        font.pixelSize: roleperm.width*0.02
+                                        checked: false
+
+                                        indicator: Rectangle {
+                                            id:checkboxrect12
+                                            implicitWidth: roleperm.width*0.03
+                                            implicitHeight:roleperm.width*0.03
+                                            x: col1child6.leftPadding
+                                            y: parent.height / 2 - height / 2
+                                            radius: 3
+                                            border.color: qgcPal.buttonHighlight
+
+                                            Rectangle {
+                                                id:innerrect12
+                                                width:  checkboxrect12.width/2+1
+                                                height:  checkboxrect12.width/2+1
+                                                x: innerrect12.width/2 - 1
+                                                y: innerrect12.width/2 - 1
+                                                radius: 2
+                                                color: qgcPal.buttonHighlight
+                                                visible: col1child6.checked
+                                            }
+                                        }
 
                                         contentItem: Text {
-                                            text: parent.text
-                                            font: parent.font
-                                            // opacity: enabled ? 1.0 : 0.3
+                                            text: col1child6.text
+                                            font: col1child6.font
+                                            // font.pixelSize: missid.width*0.3
+                                            opacity: enabled ? 1.0 : 0.3
                                             color: qgcPal.text
                                             verticalAlignment: Text.AlignVCenter
-                                            leftPadding: parent.indicator.width + parent.spacing
+                                            anchors.left: checkboxrect12.right
+                                            anchors.leftMargin: missid.indicator.width*0.6
                                         }
                                     }
                                 }
@@ -649,6 +932,45 @@ Item {
 
                             Column {
 
+                                CheckBox {
+                                    id:inactid
+                                    checked: false
+                                    text: qsTr("Inactivity Settings")
+                                    font.pixelSize: roleperm.width*0.025
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect121
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: inactid.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect1
+                                            width:  checkboxrect121.width/2+1
+                                            height:  checkboxrect121.width/2+1
+                                            x: innerrect1.width/2 - 1
+                                            y: innerrect1.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: inactid.checked
+                                        }
+                                    }
+
+                                    contentItem: Text {
+                                        text: inactid.text
+                                        font: inactid.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
+                                        color: qgcPal.text
+                                        verticalAlignment: Text.AlignVCenter
+                                        anchors.left: checkboxrect121.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
+                                    }
+                                }
+
                                 ButtonGroup {
                                     id: col2childid
                                     exclusive: false
@@ -657,9 +979,7 @@ Item {
 
                                 CheckBox {
                                     id: parentBox2
-                                    text: qsTr("Application settings")
                                     checkState: col2childid.checkState
-                                    font.pixelSize: parent.height*0.03
 
                                     // checked: col2child1.checked && col2child2.checked && col2child3.checked && col2child4.checked && col2child5.checked && col2child6.checked && col2child7.checked && col2child8.checked && col2child9.checked && col2child10.checked
                                     //            onCheckedChanged: {
@@ -675,175 +995,443 @@ Item {
                                     //                col2child10.checked = checked;
                                     //            }
 
+                                    text: qsTr("Application settings")
+                                    font.pixelSize: roleperm.width*0.025
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect13
+                                        implicitWidth: roleperm.width*0.04
+                                        implicitHeight:roleperm.width*0.04
+                                        x: parentBox2.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect13
+                                            width:  checkboxrect13.width/2+1
+                                            height:  checkboxrect13.width/2+1
+                                            x: innerrect13.width/2 - 1
+                                            y: innerrect13.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: parentBox2.checked
+                                        }
+                                    }
+
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: parentBox2.text
+                                        font: parentBox2.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect13.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
 
                                 CheckBox {
                                     id:col2child1
-                                    text: qsTr("General")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("General")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect14
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child1.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color:qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect14
+                                            width:  checkboxrect14.width/2+1
+                                            height:  checkboxrect14.width/2+1
+                                            x: innerrect14.width/2 - 1
+                                            y: innerrect14.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child1.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child1.text
+                                        font: col2child1.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect14.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
 
                                 CheckBox {
                                     id:col2child2
-                                    text: qsTr("CommLinks")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("CommLinks")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect15
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child2.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect15
+                                            width:  checkboxrect15.width/2+1
+                                            height:  checkboxrect15.width/2+1
+                                            x: innerrect15.width/2 - 1
+                                            y: innerrect15.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child2.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child2.text
+                                        font: col2child2.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect15.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child3
-                                    text: qsTr("OfflineMaps")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("OfflineMaps")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect16
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child3.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect16
+                                            width:  checkboxrect16.width/2+1
+                                            height:  checkboxrect16.width/2+1
+                                            x: innerrect16.width/2 - 1
+                                            y: innerrect16.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child3.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child3.text
+                                        font: col2child3.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect16.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child4
-                                    text: qsTr("MavLink")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("MavLink")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect17
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child4.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect17
+                                            width:  checkboxrect17.width/2+1
+                                            height:  checkboxrect17.width/2+1
+                                            x: innerrect17.width/2 - 1
+                                            y: innerrect17.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child4.checked
+                                        }
+                                    }
+
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child4.text
+                                        font: col2child4.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect17.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
 
                                 CheckBox {
                                     id:col2child5
-                                    text: qsTr("RemoteID")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("RemoteID")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect18
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child5.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect18
+                                            width:  checkboxrect18.width/2+1
+                                            height:  checkboxrect18.width/2+1
+                                            x: innerrect18.width/2 - 1
+                                            y: innerrect18.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child5.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child5.text
+                                        font: col2child5.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect18.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child6
-                                    text: qsTr("Console")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("Console")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect19
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child6.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect19
+                                            width:  checkboxrect19.width/2+1
+                                            height:  checkboxrect19.width/2+1
+                                            x: innerrect19.width/2 - 1
+                                            y: innerrect19.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child6.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child6.text
+                                        font: col2child6.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect19.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child7
-                                    text: qsTr("Help")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("Help")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect20
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child7.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect20
+                                            width:  checkboxrect20.width/2+1
+                                            height:  checkboxrect20.width/2+1
+                                            x: innerrect20.width/2 - 1
+                                            y: innerrect20.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child7.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child7.text
+                                        font: col2child7.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect20.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child8
-                                    text: qsTr("MockLink")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("MockLink")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect21
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child8.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect21
+                                            width:  checkboxrect21.width/2+1
+                                            height:  checkboxrect21.width/2+1
+                                            x: innerrect21.width/2 - 1
+                                            y: innerrect21.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child8.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child8.text
+                                        font: col2child8.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect21.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child9
-                                    text: qsTr("Debug")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("Debug")
+                                    font.pixelSize:roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect22
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child9.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color:qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect22
+                                            width:  checkboxrect22.width/2+1
+                                            height:  checkboxrect22.width/2+1
+                                            x: innerrect22.width/2 - 1
+                                            y: innerrect22.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child9.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child9.text
+                                        font: col2child9.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect22.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
                                 CheckBox {
                                     id:col2child10
-                                    text: qsTr("PaletteTest")
                                     leftPadding: indicator.width
                                     ButtonGroup.group: col2childid
-                                    font.pixelSize: parent.height*0.03
+                                    text: qsTr("Debug")
+                                    font.pixelSize: roleperm.width*0.02
+                                    checked: false
+
+                                    indicator: Rectangle {
+                                        id:checkboxrect23
+                                        implicitWidth: roleperm.width*0.03
+                                        implicitHeight:roleperm.width*0.03
+                                        x: col2child10.leftPadding
+                                        y: parent.height / 2 - height / 2
+                                        radius: 3
+                                        border.color: qgcPal.buttonHighlight
+
+                                        Rectangle {
+                                            id:innerrect23
+                                            width:  checkboxrect23.width/2+1
+                                            height:  checkboxrect23.width/2+1
+                                            x: innerrect23.width/2 - 1
+                                            y: innerrect23.width/2 - 1
+                                            radius: 2
+                                            color: qgcPal.buttonHighlight
+                                            visible: col2child10.checked
+                                        }
+                                    }
 
                                     contentItem: Text {
-                                        text: parent.text
-                                        font: parent.font
-                                        // opacity: enabled ? 1.0 : 0.3
+                                        text: col2child10.text
+                                        font: col2child10.font
+                                        // font.pixelSize: missid.width*0.3
+                                        opacity: enabled ? 1.0 : 0.3
                                         color: qgcPal.text
                                         verticalAlignment: Text.AlignVCenter
-                                        leftPadding: parent.indicator.width + parent.spacing
+                                        anchors.left: checkboxrect23.right
+                                        anchors.leftMargin: missid.indicator.width*0.6
                                     }
                                 }
 
@@ -877,26 +1465,30 @@ Item {
                     Rectangle{
                         id: submitbutton
                         color: qgcPal.text
-                        width: parent.width*0.22
+                        width: parent.width*0.13
                         height: parent.width*0.05
                         radius: 6
-                        border.color: qgcPal.windowShade
+                        border.color: qgcPal.windowShadeDark
                         border.width: 2
                         anchors.left: parent.horizontalCenter
-                        anchors.leftMargin: parent.width*.03
+                        anchors.leftMargin: parent.width*.025
                         anchors.bottom: parent.bottom
-                        anchors.bottomMargin: parent.height*.025
+                        anchors.bottomMargin: parent.height*.07
+                        // anchors.top: roleperm.bottom
+                        // // anchors.topMargin: parent.height*.003
 
                         Text{
                             id: submitbuttontxt
                             text: "SUBMIT"
                             font.pixelSize: parent.height*0.4
                             anchors.centerIn: parent
+                            color: qgcPal.windowShadeDark
                             font.bold: true
                         }
 
                         MouseArea{
                             id: submitbuttonmousearea
+                            cursorShape: Qt.PointingHandCursor
                             anchors.fill: parent
 
                             onPressed: {
@@ -912,26 +1504,30 @@ Item {
                 Rectangle{
                     id: closebutton
                     color: qgcPal.text
-                    width: parent.width*0.22
+                   width: parent.width*0.13
                     height: parent.width*0.05
                     radius: 6
-                    border.color: qgcPal.windowShade
+                    border.color: qgcPal.windowShadeDark
                     border.width: 2
                     anchors.right: parent.horizontalCenter
                     anchors.rightMargin: parent.width*.03
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: parent.height*.025
+                    anchors.bottomMargin: parent.height*.07
+                    // anchors.top: roleperm.bottom
+                    // // anchors.topMargin: parent.height*.0008
 
                     Text{
                         id: closebuttontxt
                         text: "CLOSE"
                         font.pixelSize: parent.height*0.4
                         anchors.centerIn: parent
+                        color: qgcPal.windowShadeDark
                         font.bold: true
                     }
 
                     MouseArea{
                         id: closebuttonmousearea
+                        cursorShape: Qt.PointingHandCursor
                         anchors.fill: parent
 
                         onPressed: {

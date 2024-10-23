@@ -108,6 +108,10 @@ public:
     /// Returns the string for speed units which has configued by user
     static QString appSettingsSpeedUnitsString();
 
+    //Added by DST
+    static QString appSettingsTemperatureUnitsString(void);
+    //
+
     static const QString defaultCategory    ();
     static const QString defaultGroup       ();
 

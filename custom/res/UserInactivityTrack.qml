@@ -12,12 +12,19 @@ import QGroundControl.FactControls  1.0
 import QGroundControl.Controls      1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.Controllers   1.0
-
+import QtGraphicalEffects 1.15
 
 Item {
-    property var inactivityTime: 45
+    property var inactivityTime: 20
     property alias applybuttonmousearea: applybuttonmousearea
     property alias intervalComboBox: timecombobox.currentText
+    property alias timecombobox: timecombobox
+
+    Component.onCompleted: {
+        console.log("GET INACT TIMEOUT")
+        inactivityTime = dstDb.getInactivityTimeout()
+        console.log("GET INACT TIMEOUT ",inactivityTime)
+    }
 
     Rectangle{
         id: mainRect
@@ -86,7 +93,7 @@ Item {
 
                 Text{
                     id: content1
-                    text: "Current Inactivity Timeout Set: "+inactivityTime
+                    text: "Current Inactivity Timeout Set: "+inactivityTime+" minute(s)."
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.topMargin: parent.height*0.12
@@ -110,7 +117,6 @@ Item {
                     id: timecombobox
                     width: parent.width*0.3
                     height: parent.height*0.14
-
                     anchors.verticalCenter: content2.verticalCenter
                     anchors.left: content2.right
                     anchors.leftMargin: parent.width*0.02
@@ -147,15 +153,30 @@ Item {
                         }
                     }
                     currentIndex: 0
+
                     indicator: Image{
                         id: indicator
-                        source: "/custom/img/logout.png"
+                        source: "/custom/img/downarrow.png"
                         height: parent.height*.8
                         width: parent.height*.8
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: parent.width*.01
                         rotation: timecombobox.popup.visible ? 180 : 0
+
+                        ColorOverlay{
+                            anchors.fill: indicator
+                            source: indicator
+                            color:qgcPal.text
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked:{
+                                timecombobox.popup.visible = !timecombobox.popup.visible
+                            }
+                        }
                     }
 
                     // Display the selected data
@@ -166,6 +187,33 @@ Item {
                         color: qgcPal.windowShadeDark
                         border.color: qgcPal.buttonHighlight
                         border.width: 1
+
+                        Image{
+                            id:downarrow1
+                            source: "/custom/img/downarrow.png"
+                            height: parent.height*.8
+                            width: parent.height*.8
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: parent.right
+                            anchors.rightMargin: parent.width*.01
+                            rotation: timecombobox.popup.visible ? 180 : 0
+
+                            ColorOverlay{
+                                anchors.fill: downarrow1
+                                source: downarrow1
+                                color:qgcPal.text
+                            }
+
+                            MouseArea{
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked:{
+                                    timecombobox.popup.visible = !timecombobox.popup.visible
+                                }
+
+
+                            }
+                        }
 
                         Text {
                             text: timecombobox.currentText
@@ -204,6 +252,7 @@ Item {
 
                     MouseArea{
                         id: applybuttonmousearea
+                        cursorShape: Qt.PointingHandCursor
                         anchors.fill: parent
 
                         onPressed: {

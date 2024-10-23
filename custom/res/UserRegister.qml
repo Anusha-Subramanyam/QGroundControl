@@ -165,6 +165,7 @@ Item {
 
                     MouseArea{
                         anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
 
                         onPressed: {
                             eyeIcon.opacity = 0.5
@@ -248,6 +249,7 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             onClicked:{
                                 rolecombobox.popup.visible = !rolecombobox.popup.visible
                             }
@@ -281,6 +283,7 @@ Item {
 
                             MouseArea{
                                 anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked:{
                                     rolecombobox.popup.visible = !rolecombobox.popup.visible
                                 }
@@ -298,6 +301,23 @@ Item {
                             font.pixelSize: parent.height * 0.4
                             elide: Text.ElideRight
                             wrapMode: Text.WordWrap
+                        }
+                    }
+
+                    popup: Popup {
+                        id: popup4
+                        width: rolecombobox.width
+                        height: (roleRegRect.height *2) // Adjust the height based on the number of items
+                        y: rolecombobox.height*0.9
+                        x: rolecombobox.width*0
+
+
+                        contentItem: ListView {
+                            clip: true
+                            anchors.fill: parent
+                            model: rolecombobox.popup.visible ? rolecombobox.delegateModel : null
+                            ScrollIndicator.vertical: ScrollIndicator {}
+
                         }
                     }
 
@@ -454,6 +474,7 @@ Item {
 
                 MouseArea{
                     id: submitbuttonmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill: parent
 
                     onPressed: {
@@ -489,6 +510,7 @@ Item {
 
                 MouseArea{
                     id: closebuttonmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill: parent
 
                     onPressed: {

@@ -144,6 +144,7 @@ Item {
 
                     MouseArea{
                         anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
 
                         onPressed: {
                             eyeIcon.opacity = 0.5
@@ -200,6 +201,7 @@ Item {
 
                 MouseArea{
                     id: loginbuttonmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill: parent
 
                     onPressed: {

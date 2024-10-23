@@ -6,6 +6,9 @@ create table if NOT EXISTS UserData(
 	UserSince TEXT,
 	LastLogin TEXT);
 
+create table if NOT EXISTS Settings(
+	InactivityTimeout INTEGER);
+
 create table if NOT EXISTS SessionLogs(
 	SessionId TEXT PRIMARY KEY NOT NULL UNIQUE,
 	UserId TEXT,
@@ -19,3 +22,4 @@ create table if NOT EXISTS ActivityLogs(
 	Description TEXT);
 		
 INSERT into UserData(UserId,Password,IsActive,RoleID,UserSince,LastLogin) values('ADMIN','I90M3V2QqsfWn3nhcjtlpw==',0,'RID1','20240916114612','');
+INSERT into Settings(InactivityTimeout) values(45);

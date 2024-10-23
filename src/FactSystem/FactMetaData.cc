@@ -1222,6 +1222,18 @@ QString FactMetaData::appSettingsSpeedUnitsString()
     }
 }
 
+//Added by DST
+QString FactMetaData::appSettingsTemperatureUnitsString()
+{
+    const AppSettingsTranslation_s* pAppSettingsTranslation = _findAppSettingsUnitsTranslation("F", UnitTemperature);
+    if (pAppSettingsTranslation) {
+        return pAppSettingsTranslation->cookedUnits;
+    } else {
+        return QStringLiteral("C");
+    }
+}
+//
+
 double FactMetaData::cookedIncrement(void) const
 {
     return _rawTranslator(this->rawIncrement()).toDouble();

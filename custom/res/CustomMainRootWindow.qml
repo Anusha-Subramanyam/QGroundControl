@@ -149,21 +149,29 @@ ApplicationWindow {
 
     //Added by DST
     function setScreenPermissions(screen){
-        var screens = opCls.getScreenNames()
+        //var screens = opCls.getScreenNames()
         var permissions = opCls.getPermListBasedonScreen(screen)
-        console.log("SCREENS: ",screens);
+        //console.log("SCREENS: ",screens);
         console.log("PERMISSION: ",permissions);
         switch(screen){
-        case "FlyView":
+        case "Menu":
+            menuscreen.dashboardRect.visible = (permissions.indexOf("Dashboard") !== -1) ? true : false
+            menuscreen.dashboardRect.enabled = (permissions.indexOf("Dashboard") !== -1) ? true : false
+            menuscreen.gcsRect.visible = (permissions.indexOf("GCS") !== -1) ? true : false
+            menuscreen.gcsRect.enabled = (permissions.indexOf("GCS") !== -1) ? true : false
+            menuscreen.usersRect.visible = (permissions.indexOf("Users") !== -1) ? true : false
+            menuscreen.usersRect.enabled = (permissions.indexOf("Users") !== -1) ? true : false
+            menuscreen.rolesRect.visible = (permissions.indexOf("UserRoles") !== -1) ? true : false
+            menuscreen.rolesRect.enabled = (permissions.indexOf("UserRoles") !== -1) ? true : false
+            menuscreen.inactivityRect.visible = (permissions.indexOf("InactivitySettings") !== -1) ? true : false
+            menuscreen.inactivityRect.enabled = (permissions.indexOf("InactivitySettings") !== -1) ? true : false
+            break;
+        case "GCS":
             flightView._widgetLayer.rightToolStrip.flyViewToolStripActionList.planButton.visible = (permissions.indexOf("Planning") !== -1) ? true : false
             flightView._widgetLayer.instrumentPanel.visible = (permissions.indexOf("Telemetry") !== -1) ? true : false
-            flightView._widgetLayer.rightToolStrip.flyViewToolStripActionList.dashboardButton.visible = (permissions.indexOf("Dashboard") !== -1) ? true : false
-            break;
-        case "Menu":
             vehSetupVis = (permissions.indexOf("VehicleSetup") !== -1) ? true : false
             analyzetoolsVis = (permissions.indexOf("AnalyzeTools") !== -1) ? true : false
             appSettVis = (permissions.indexOf("AppSettings") !== -1) ? true : false
-            manageUserVis = (permissions.indexOf("ManageUsers") !== -1) ? true : false
             break;
         case "AnalyzeTools":
             showLogDownload = (permissions.indexOf("LogDownLoad") !== -1) ? true : false
@@ -184,6 +192,7 @@ ApplicationWindow {
             showMockLink = (permissions.indexOf("MockLink") !== -1) ? true : false
             showDebug = (permissions.indexOf("Debug") !== -1) ? true : false
             showPalette = (permissions.indexOf("PaletteTest") !== -1) ? true : false
+            break;
         default:
             break;
         }
@@ -258,9 +267,11 @@ ApplicationWindow {
         menuscreen.visible = true
         menuscreen.enabled = true
         menuscreen.defaultDashboardSelect()
+        menuscreen.paramTimer.start()
         flightView.visible = false
         planView.visible = false
         toolbar.visible = false
+        setScreenPermissions("Menu");
 
     }
 
@@ -335,6 +346,7 @@ ApplicationWindow {
             toolDrawer.visible = false
             menuscreen.visible = false
             menuscreen.enabled = false
+            menuscreen.paramTimer.stop()
             //menuscreen.modelTimer.stop()
             //toolSelectDialogComponent.visible = false
             logoutFlag = false
@@ -744,10 +756,21 @@ ApplicationWindow {
         enabled: false
 
         onGcsClicked: {
+            setScreenPermissions("GCS");
             menuscreen.visible = false
             menuscreen.enabled = false
             showFlyView()
             toolbar.visible = true
+
+        }
+
+        onDronelistclicked:{
+            activedronescreen.visible = true
+            activedronescreen.enabled = true
+            menuscreen.enabled = false
+            menuscreen.opacity = 0.6
+            console.log("menuscreensignal fire")
+            menuscreen.paramTimer.stop()
         }
 
     }
@@ -766,7 +789,10 @@ ApplicationWindow {
             activedronescreen.enabled = false
             menuscreen.opacity = 1
             menuscreen.enabled = true
-            //menuscreen.modelTimer.start()
+            menuscreen.defaultDashboardSelect()
+
+            menuscreen.paramTimer.start()
+            setScreenPermissions("Menu");
         }
     }
 
@@ -783,18 +809,18 @@ ApplicationWindow {
             toolbar.visible = true
         }
 
-        Component.onCompleted: {
-            console.log("Emitteddddd")
-            var roles = opCls.getInitialRoles()
-            if(roles.length != 0){
-                console.log("Length: "<<roles.length)
-                for(var i=0;i<roles.length;i++){
-                    console.log("Data: "<<i<<roles[i])
-                    userdetails.userrolemodel.combobox.model.append({text:roles[i]})
-                }
-            }
-
-        }
+        // Component.onCompleted: {
+        //     console.log("Emitteddddd")
+        //     var roles = opCls.getInitialRoles()
+        //     console.log("ROLESSSSS: ",roles," ",roles.length)
+        //     if(roles.length != 0){
+        //         console.log("Length inside: "<<roles.length)
+        //         for(var i=0;i<roles.length;i++){
+        //             console.log("Data inside: "<<i<<roles[i])
+        //             userdetails.userrolemodel.combobox.model.append({text:roles[i]})
+        //         }
+        //     }
+        // }
     }
 
     //-------------------------------------------------------------------------
@@ -1002,7 +1028,7 @@ ApplicationWindow {
         loginbuttonmousearea.onClicked: {
             if(userid != "" && password != ""){
                 if(roleModel.searchUser(userid,password)){
-                    //setScreenPermissions("FlyView");
+                    setScreenPermissions("Menu");
                     opCls.setSessionID(userid);
                     //showFlyView();
                     toolbar.visible = false
@@ -1012,6 +1038,7 @@ ApplicationWindow {
                     menuscreen.visible = true
                     menuscreen.enabled = false
                     menuscreen.opacity = 0.6
+                    menuscreen.defaultDashboardSelect()
 
                     // toolbar.visible = true
                     // flightView.visible = true

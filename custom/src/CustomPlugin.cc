@@ -148,7 +148,7 @@ QVariantList &CustomPlugin::analyzePages()
         _addAnalyzeToolsEntry(tr("MAVLink Console"), "qrc:/qml/MavlinkConsolePage.qml", "qrc:/qmlimages/MavlinkConsoleIcon");
         _addAnalyzeToolsEntry(tr("MAVLink Inspector"), "qrc:/qml/MAVLinkInspectorPage.qml", "qrc:/qmlimages/MAVLinkInspector");
         _addAnalyzeToolsEntry(tr("Vibration"), "qrc:/qml/VibrationPage.qml", "qrc:/qmlimages/VibrationPageIcon");
-        _addAnalyzeToolsEntry(tr("Activity Logs"), "qrc:/qml/ActivityLogPage.qml", "qrc:/qmlimages/VibrationPageIcon");
+        _addAnalyzeToolsEntry(tr("User Activity Logs"), "qrc:/qml/ActivityLogPage.qml", "/custom/img/UserActivityLogIcon.png");
     }
     return _customAnalyzeToolsList;
 }

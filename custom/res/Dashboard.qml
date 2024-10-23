@@ -1,4 +1,4 @@
-import QtQuick          2.12
+import QtQuick          2.15
 import QtQuick.Controls 2.4
 import QtQuick.Layouts  1.11
 import QtQuick.Dialogs  1.3
@@ -20,17 +20,20 @@ Rectangle {
     property var userid: ""
     property var userrole: ""
     property var regDate: ""
-
+    property var parameterlistCnt: 0
+    property alias dronelistmouseareaid: dronelistmouseareaid
     property var _activevechile: QGroundControl.multiVehicleManager.activeVehicle
     property var _unitsSettings: QGroundControl.settingsManager.unitsSettings
     property var sensorname: _activevechile.sysStatusSensorInfo.sensorNames
     property var sensorvalue: _activevechile.sysStatusSensorInfo.sensorStatus
     property var _planMasterController: _activevechile.planMasterControllerPlanView
 
+    property alias generatereportmousearea: generatereportmousearea
+
     //property alias bckbuttonmousearea: bckbuttonmousearea
 
     Component.onCompleted: {
-        populateData()
+        populateData1()
     }
 
     Connections{
@@ -44,10 +47,10 @@ Rectangle {
         }
     }
 
-    function populateData(){
+    function populateData1(){
         parametermodel.clear()
         parametermodel.append({ paramname: "Vehicle ID",value: (_activevechile != null) ? _activevechile.id.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
-        parametermodel.append({ paramname: "Vehicle Type",value: (_activevechile != null) ? _activevechile.vehicleTypeName() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
+        parametermodel.append({ paramname: "Vehicle Type",value: (_activevechile != null) ? _activevechile.vehicleTypeString.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Firmware Type",value:(_activevechile != null) ?  _activevechile.firmwareTypeString.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Altitude",value: (_activevechile != null) ? _activevechile.altitudeAboveTerr.value+" "+QGroundControl.unitsConversion.appSettingsVerticalDistanceUnitsString : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Height above the mean sea level (ASML)",value: (_activevechile != null) ? _activevechile.altitudeAMSL.value.toFixed(4)+" "+QGroundControl.unitsConversion.appSettingsVerticalDistanceUnitsString : "NA", underline: "/custom/img/UnderLineIcon.svg" })
@@ -58,6 +61,10 @@ Rectangle {
         parametermodel.append({ paramname: "Heading of the UAV", value: (_activevechile != null) ? _activevechile.heading.value : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Flight Mode", value: (_activevechile != null) ? _activevechile.flightMode.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Distance from the GCS", value: (_activevechile != null) ? _activevechile.distanceToGCS.value+" "+QGroundControl.unitsConversion.appSettingsHorizontalDistanceUnitsString : "NA", underline: "/custom/img/UnderLineIcon.svg" })
+    }
+
+    function populateData2(){
+        parametermodel.clear()
         parametermodel.append({ paramname: "Distance from the Target", value: "NA", underline: "/custom/img/UnderLineIcon.svg" })
         //parametermodel.append({ paramname: "Mission Time", value: _planMasterController.missionController.missionTime, underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Magnetometer Sensor", value: (_activevechile != null) ? sensorvalue[0] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
@@ -71,17 +78,21 @@ Rectangle {
         parametermodel.append({ paramname: "Motor Output Sensor", value: (_activevechile != null) ? sensorvalue[8] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Terrain Sensor", value: (_activevechile != null) ? sensorvalue[9] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Battery Sensor", value: (_activevechile != null) ? sensorvalue[10] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
+    }
+
+    function populateData3(){
+        parametermodel.clear()
         parametermodel.append({ paramname: "Propulsion Sensor", value: (_activevechile != null) ? sensorvalue[11] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Z/altitude Control Sensor", value: (_activevechile != null) ? sensorvalue[12] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "X/Y Position Control Sensor",value: (_activevechile != null) ? sensorvalue[13] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "GeoFence Sensor",value: (_activevechile != null) ? sensorvalue[14] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Logging Sensor",value: (_activevechile != null) ? sensorvalue[15] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Pre-Arm Check Sensor",value: (_activevechile != null) ? sensorvalue[16] : "NA", underline: "/custom/img/UnderLineIcon.svg" })
-        parametermodel.append({ paramname: "Payload Status (Camera)",value: "NA", underline: "/custom/img/UnderLineIcon.svg" })
+        //parametermodel.append({ paramname: "Payload Status (Camera)",value: "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Communication Link Status (Signal Strength)", value: (_activevechile != null) ? _activevechile.rcRSSI.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Wind Speed", value: (_activevechile != null) ? _activevechile.wind.speed.value+" "+QGroundControl.unitsConversion.appSettingsSpeedUnitsString: "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Wind Direction", value: (_activevechile != null) ? _activevechile.wind.direction.value+" deg" : "NA", underline: "/custom/img/UnderLineIcon.svg" })
-        parametermodel.append({ paramname: "Temperature", value: (_activevechile != null) ? _activevechile.temperature.temperature1.value+" C" : "NA", underline: "/custom/img/UnderLineIcon.svg" })
+        parametermodel.append({ paramname: "Temperature", value: (_activevechile != null) ? _activevechile.temperature.temperature1.value.toFixed(4)+" "+QGroundControl.unitsConversion.appSettingsTemperatureUnitsString : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Message Count", value: (_activevechile != null) ? _activevechile.messageCount.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
         parametermodel.append({ paramname: "Firmware Version", value: (_activevechile != null) ? _activevechile.firmwareCustomMajorVersion.toString()+"."+_activevechile.firmwareCustomMinorVersion.toString()+"."+_activevechile.firmwareCustomPatchVersion.toString() : "NA", underline: "/custom/img/UnderLineIcon.svg" })
     }
@@ -144,7 +155,7 @@ Rectangle {
             source: "/custom/img/userprofile.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: parent.height*0.14
+            anchors.topMargin: parent.height*0.16
 
             ColorOverlay{
                 anchors.fill: parent
@@ -423,6 +434,140 @@ Rectangle {
             wrapMode: Text.NoWrap
         }
 
+        Rectangle{
+            id: prev
+            width: parent.width*0.05
+            height: parent.width*0.05
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.rightMargin: parent.width*0.042
+            anchors.topMargin: parent.height*0.07
+            color: "transparent"
+            visible: false
+
+            Image {
+                id: prevImg
+                source: "/custom/img/arrow.png"
+                anchors.fill: parent
+                rotation: 270
+
+                ColorOverlay{
+                    anchors.fill: parent
+                    source: parent
+                    color:qgcPal.text
+                }
+            }
+            // Text{
+            //     id: prevImg
+            //     text: ">"
+            //     color: qgcPal.text
+            //     font.bold: true
+            //     font.pixelSize: parent.height*0.7
+            //     rotation: 270
+            //     anchors.centerIn: parent
+            // }
+
+            MouseArea{
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+                onHoveredChanged: {
+                    if(containsMouse){
+                        prev.opacity = 0.6
+                    }else{
+                        prev.opacity = 1
+                    }
+                }
+
+                onPressed: {
+                    prev.opacity = 0.5
+                }
+
+                onReleased: {
+                    prev.opacity = 1
+                }
+
+                onClicked: {
+                    if(parameterlistCnt > 0){
+                        next.visible = true
+                        parameterlistCnt -= 1
+                    }
+                    if(parameterlistCnt == 0){
+                        prev.visible = false
+                    }
+                }
+            }
+        }
+
+        Rectangle{
+            id: next
+            width: parent.width*0.05
+            height: parent.width*0.05
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: parent.width*0.042
+            anchors.bottomMargin: parent.height*0.007
+            color: "transparent"
+
+            Image {
+                id: nextImg
+                source: "/custom/img/arrow.png"
+                anchors.fill: parent
+                rotation: 90
+
+                ColorOverlay{
+                    anchors.fill: parent
+                    source: parent
+                    color:qgcPal.text
+                }
+            }
+
+            // Text{
+            //     id: nextImg
+            //     text: ">"
+            //     color: qgcPal.text
+            //     font.bold: true
+            //     font.pixelSize: parent.height*0.5
+            //     rotation: 90
+            // }
+
+            MouseArea{
+                anchors.fill: parent
+
+                cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+                onHoveredChanged: {
+                    if(containsMouse){
+                        next.opacity = 0.6
+                    }else{
+                        next.opacity = 1
+                    }
+                }
+
+                onPressed: {
+                    next.opacity = 0.5
+                }
+
+                onReleased: {
+                    next.opacity = 1
+                }
+
+                onClicked: {
+                    if(parameterlistCnt < 2){
+                        prev.visible = true
+                        parameterlistCnt += 1
+                    }
+                    if(parameterlistCnt == 2){
+                        next.visible = false
+                    }
+                }
+            }
+        }
+
+        // Rectangle{
+        //     id: next
+        // }
+
         ListModel {
             id: parametermodel
         }
@@ -437,6 +582,13 @@ Rectangle {
             backgroundVisible: false
             frameVisible: false
             verticalScrollBarPolicy: ScrollBar.AlwaysOff
+
+            MouseArea{
+                anchors.fill:parent
+                onWheel: {
+                    wheel.accepted = true
+                }
+            }
 
             model: parametermodel
 
@@ -455,7 +607,7 @@ Rectangle {
                         Text {
                             anchors.top: parent.top
                             anchors.topMargin: parent.height*.1
-                            text: model ? qsTr(styleData.row+1 + ". " + model.paramname) : ""
+                            text: model ? qsTr(model.paramname) : ""
                             font {
                                 pixelSize: parent.height*.55
                                 bold: false
@@ -569,6 +721,7 @@ Rectangle {
         }
 
 
+
         ChartView {
             id: chart
             //title: "Active/Inactive Drones"
@@ -605,6 +758,80 @@ Rectangle {
                 onClicked: {
 
                 }
+            }
+        }
+
+        Rectangle{
+            id: selectactivelist
+            width: parent.height*0.11
+            height: parent.height*0.11
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: parent.height*0.04
+            anchors.rightMargin:parent.height*0.04
+            color: "transparent"
+
+            Timer {
+                id: holdTimeractivevehicle
+                interval: 500
+                repeat: false
+                running: false
+                onTriggered: {
+                    console.log("Triggerredddddddddddddddddd")
+                    popupText.text = "Active Vehicle List"
+                    popup.x = selectactivelist.x + parent.width*0.23
+                    popup.y = selectactivelist.y + parent.height*14
+                    popup.open()
+                }
+            }
+
+            Image{
+                id: dronelistid
+                source: "/custom/img/SelectDroneIcon.png"
+                anchors.fill: parent
+                anchors.centerIn: parent
+                ColorOverlay{
+                    id:coloroverid
+                    anchors.fill: parent
+                    source: dronelistid
+                    color:qgcPal.text
+                }
+
+            }
+            MouseArea{
+                id:dronelistmouseareaid
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+
+                onHoveredChanged: {
+                    if(containsMouse){
+                        selectactivelist.opacity = 0.6
+                    }
+                    else{
+                        selectactivelist.opacity = 1
+                    }
+                }
+
+                onEntered: {
+                    holdTimeractivevehicle.start()
+                }
+
+                onExited: {
+                    holdTimeractivevehicle.stop()
+                    popup.close()
+                    console.log("exited......................................")
+                }
+
+
+                onPressed: {
+                    selectactivelist.opacity = 0.4
+                }
+
+                onReleased: {
+                    selectactivelist.opacity = 1
+                }
+
             }
         }
     }
@@ -707,7 +934,9 @@ Rectangle {
             }
 
             MouseArea{
+                id: generatereportmousearea
                 anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
 
                 onHoveredChanged: {
@@ -730,5 +959,25 @@ Rectangle {
 
         }
 
+    }
+    Popup {
+        id: popup
+        modal: false
+        focus: true
+        closePolicy: Popup.CloseOnEscape
+        background: null
+        Rectangle {
+            width: popupText.implicitWidth + 20
+            height: popupText.implicitHeight + 20
+            color: qgcPal.text
+            radius: 10
+
+            Text {
+                id: popupText
+                font.pointSize: 8
+                color: qgcPal.windowShadeDark
+                anchors.centerIn: parent
+            }
+        }
     }
 }

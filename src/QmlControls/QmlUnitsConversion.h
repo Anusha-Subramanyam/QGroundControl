@@ -26,6 +26,9 @@ public:
     Q_PROPERTY(QString appSettingsAreaUnitsString               READ appSettingsAreaUnitsString               CONSTANT)
     Q_PROPERTY(QString appSettingsWeightUnitsString             READ appSettingsWeightUnitsString             CONSTANT)
     Q_PROPERTY(QString appSettingsSpeedUnitsString              READ appSettingsSpeedUnitsString              CONSTANT)
+    //Added by DST
+    Q_PROPERTY(QString appSettingsTemperatureUnitsString        READ appSettingsTemperatureUnitsString              CONSTANT)
+    //
 
     /// Converts from meters to the user specified distance unit
     Q_INVOKABLE QVariant metersToAppSettingsHorizontalDistanceUnits(const QVariant& meters) const { return FactMetaData::metersToAppSettingsHorizontalDistanceUnits(meters); }
@@ -67,6 +70,10 @@ public:
 
     /// Returns the string for speed units which has configued by user
     QString appSettingsSpeedUnitsString() { return FactMetaData::appSettingsSpeedUnitsString(); }
+
+    //Added by DST
+    QString appSettingsTemperatureUnitsString() { return FactMetaData::appSettingsTemperatureUnitsString(); }
+    //
 
     Q_INVOKABLE double degreesToRadians(double degrees) { return qDegreesToRadians(degrees); }
     Q_INVOKABLE double radiansToDegrees(double radians) { return qRadiansToDegrees(radians); }

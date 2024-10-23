@@ -12,11 +12,12 @@ import QGroundControl.FactControls  1.0
 import QGroundControl.Controls      1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.Controllers   1.0
+import QtGraphicalEffects 1.15
 
 AnalyzePage {
     id:                 activitylogpage
     pageComponent:      pageComponent
-    pageDescription:    qsTr("Activity Logs denote the activities or events performed by a specific user during his session.")
+    pageDescription:    qsTr("User Activity Logs denote the activities or events performed by a specific user during his session.")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -106,7 +107,7 @@ AnalyzePage {
                 anchors.top: tableView.bottom
 
                 RowLayout{
-                    spacing: 40
+
                     anchors.horizontalCenter: mainrect.horizontalCenter
                     anchors.verticalCenter :  mainrect.verticalCenter
                     Rectangle{
@@ -115,19 +116,25 @@ AnalyzePage {
                         width  : mainrect.height*0.8
                         // enabled: false
                         // opacity: 0.5
-                        color: "skyblue"
-                        // border.width: 5;
-                        border.color: "black"
+                        color: "transparent"
 
-                        // Text {
-                        //     id: name
-                        //     text: qsTr("<< Prev")
-                        //     anchors.centerIn: parent
-                        //     font.pixelSize: 30
-                        //     color: "white"
-                        // }
+
+                        Image{
+                            id: dronelistid
+                            source: "/custom/img/Arrow.png"
+                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            ColorOverlay{
+                                id:coloroverid
+                                anchors.fill: parent
+                                source: dronelistid
+                                color:qgcPal.text
+                            }
+                            mirror: true
+                        }
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if(count>1){
                                     --count
@@ -148,17 +155,18 @@ AnalyzePage {
                     Rectangle{
                         id:text
                         height: mainrect.height*0.8
-                        width  : mainrect.width*0.1
-                        color: "skyblue"
+                        width  : mainrect.width*0.05
+                        color: "transparent"
                         // border.width: 5;
-                        border.color: "black"
+
 
                         Text {
                             id: text1
                             text: qsTr(count + " " + "/"+" " +numberOfPage )
                             anchors.centerIn: parent
-                            font.pixelSize: 30
-                            color: "white"
+                            font.pixelSize: text.width*0.23
+                            font.bold: true
+                            color: qgcPal.text
                         }
 
                     }
@@ -166,9 +174,9 @@ AnalyzePage {
                         id:btn2
                         height: mainrect.height*0.8
                         width  : mainrect.height*0.8
-                        color: "skyblue"
+                        color: "transparent"
                         // border.width: 5;
-                        border.color: "black"
+
 
                         // Text {
                         //     id: name2
@@ -177,8 +185,24 @@ AnalyzePage {
                         //     font.pixelSize: 30
                         //     color: "white"
                         // }
+
+                        Image{
+                            id: dronelistid1
+                            source: "/custom/img/Arrow.png"
+                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            ColorOverlay{
+                                id:coloroverid1
+                                anchors.fill: parent
+                                source: dronelistid1
+                                color:qgcPal.text
+                            }
+
+
+                        }
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if(count<numberOfPage){
                                     ++count
@@ -198,8 +222,6 @@ AnalyzePage {
                     }
                 }
             }
-
-
 
 
 

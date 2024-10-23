@@ -98,8 +98,8 @@ QHash<int, QByteArray> UserRoleModel::roleNames() const
 void UserRoleModel::addData(const QString &id, const QString &pwd, const QString &active, const QString &userRole, const QString userSince, const QString lastLogin)
 {
     beginInsertRows(QModelIndex(),rowCount(),rowCount());
-    userData.append({id, pwd, active, userRole,userSince,lastLogin,"/custom/img/EditIcn.png","/custom/img/DeleteIcn.svg"});
-    mainData.append({id, pwd, active, userRole,userSince,lastLogin,"/custom/img/EditIcn.png","/custom/img/DeleteIcn.svg"});
+    userData.append({id, pwd, active, userRole,userSince,lastLogin,"/custom/img/EditIcn.png","/custom/img/DeleteIcn.png"});
+    mainData.append({id, pwd, active, userRole,userSince,lastLogin,"/custom/img/EditIcn.png","/custom/img/DeleteIcn.png"});
     // userPwdHash.insert(id, pwd);
     // userRoleHash.insert(id,userRole);
     endInsertRows();

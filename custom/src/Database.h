@@ -44,6 +44,8 @@ public:
     Q_INVOKABLE void insertActivityLogs(QString Activity, QString Description);
     Q_INVOKABLE void deleteUser(QString userID);
     void editData(int index,QString userID,QString pass, QString role);
+    Q_INVOKABLE void setInactivityTimeout(int timeSecs);
+    Q_INVOKABLE int getInactivityTimeout();
 
 
     // QString getUserID();

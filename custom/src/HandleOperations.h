@@ -44,12 +44,12 @@ public:
     Q_INVOKABLE QStringList getScreenNames();
     Q_INVOKABLE void setSessionID(QString user);
     Q_INVOKABLE void handleManualLogout();
-    Q_INVOKABLE void userRegistration(QString user, QString pwd, QString role);
+    Q_INVOKABLE void userRegistration(QString user, QString pwd, int role);
     Q_INVOKABLE void handleInactiveChanged(int interval);
-    Q_INVOKABLE void editUserData(int row, QString id, QString password, QString role);
+    Q_INVOKABLE void editUserData(int row, QString id, QString password, int role);
     Q_INVOKABLE QString getDateTime(QString input);
 
-    Q_INVOKABLE bool addRoleConfigfile(QList<QVariant> permission_data);
+    Q_INVOKABLE bool addRoleConfigfile(QList<QVariant> permission_data, int index);
     Q_INVOKABLE bool deleteRoleConfigfile(QString roleid);
     Q_INVOKABLE QStringList getInitialRoles();
 
@@ -79,7 +79,7 @@ private:
 
     QTimer inactTimer;
     QElapsedTimer elapsedTime;
-    uint16_t intactInterval = 45;
+    uint16_t intactInterval = 20;
 
     QByteArray configFileData;
     QStringList rolenames;

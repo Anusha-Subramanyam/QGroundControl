@@ -1,4 +1,4 @@
-import QtQuick          2.12
+import QtQuick          2.15
 import QtQuick.Controls 2.4
 import QtQuick.Layouts  1.11
 import QtQuick.Dialogs  1.3
@@ -23,6 +23,15 @@ Item {
         target: QGroundControl.multiVehicleManager.vehicles
         onCountChanged:{
             console.log(QGroundControl.multiVehicleManager.vehicles.count)
+
+            if(QGroundControl.multiVehicleManager.vehicles.count>0){
+                popuprectid.visible = false
+                popuprectid.enabled = false
+            }else{
+                popuprectid.visible = true
+                popuprectid.enabled = true
+            }
+
             updateactivedronelist()
         }
     }
@@ -38,7 +47,7 @@ Item {
             console.log("vehicle.vehicleTypeString = ", vehicle.vehicleTypeString)
             console.log(".............................")
 
-            droneModel.append({vehid: vehicle.id , firmtype: vehicle.firmwareTypeString ,vehtype: vehicle.vehicleTypeString  })
+            droneModel.append({vehid: vehicle.id , firmtype: vehicle.firmwareTypeString ,vehtype: vehicle.vehicleTypeString, selected: "/custom/img/DroneUnselectIcon.png"})
         }
     }
 
@@ -64,7 +73,8 @@ Item {
 
         ListModel {
             id: droneModel
-            //ListElement { vehid: "001"; firmtype: "PX4"; vehtype: "Quadcopter"}
+            // ListElement { vehid: "001"; firmtype: "PX4"; vehtype: "Quadcopter"; selected: "/custom/img/DroneUnselectIcon.png"}
+            // ListElement { vehid: "002"; firmtype: "CCC"; vehtype: "www"; selected: "/custom/img/DroneUnselectIcon.png"}
             // ListElement { vehicleid: "002"; firmwaretype: "ArduPilot"; vehicletype: "Hexacopter"; selected: false }
             // ListElement { vehicleid: "003"; firmwaretype: "PX4"; vehicletype: "Octocopter"; selected: false }
             // ListElement { vehicleid: "003"; firmwaretype: "PX4"; vehicletype: "Octocopter"; selected: false }
@@ -96,14 +106,14 @@ Item {
                         height: parent.height*.64
                         color: "transparent"
                         radius: parent.height*.1
-
+                        anchors.verticalCenter: parent.verticalCenter
 
                         Text {
                             anchors.top: parent.top
                             anchors.topMargin: parent.height*.1
                             text: model ? model.vehid : ""
                             font {
-                                pixelSize: parent.height*.55
+                                pixelSize: parent.height*.7
                                 bold: false
                             }
                             color: qgcPal.text
@@ -128,15 +138,15 @@ Item {
                         height: parent.height*.64
                         color: "transparent"
                         radius: parent.height*.1
-
-                        property var    _vehicle:   object
+                        anchors.verticalCenter: parent.verticalCenter
+                        // property var    _vehicle:   object
 
                         Text {
                             anchors.top: parent.top
                             anchors.topMargin: parent.height*.1
                             text: model ? model.firmtype : ""
                             font {
-                                pixelSize: parent.height*.55
+                                pixelSize: parent.height*.7
                                 bold: false
                             }
                             color: qgcPal.text
@@ -160,14 +170,14 @@ Item {
                         height: parent.height*.64
                         color: "transparent"
                         radius: parent.height*.1
-
+                        anchors.verticalCenter: parent.verticalCenter
 
                         Text {
                             anchors.top: parent.top
                             anchors.topMargin: parent.height*.1
                             text: model ? model.vehtype : ""
                             font {
-                                pixelSize: parent.height*.55
+                                pixelSize: parent.height*.7
                                 bold: false
                             }
                             color: qgcPal.text
@@ -193,61 +203,61 @@ Item {
                         height: parent.height*.64
                         color: "transparent"
                         radius: parent.height*.1
+                        anchors.verticalCenter: parent.verticalCenter
 
-                        property var    _vehicle:   object
 
-                        Text {
-                            anchors.top: parent.top
-                            anchors.topMargin: parent.height*.2
-                            text: model ? "true" : ""
-                            font {
-                                pixelSize: parent.height*.55 // Set the font size
-                                bold: false
-                            }
-                            color: qgcPal.text
-                            clip: true
-                            elide: Text.ElideRight
-                            wrapMode: Text.NoWrap
+                        Image{
+                            id: userprofileimg
+                            width: parent.height*0.9
+                            height: parent.height*0.9
+                            source: model.selected
                             anchors.centerIn: parent
 
-                        }
-                    }
-                }
-            }
-
-            TableViewColumn {
-                role: "underline"
-                title: "underline"
-                width: tableviewcomp.width
-
-                delegate: Item {
-                    Rectangle {
-                        width: parent.width*5
-                        height: parent.height*.04
-                        x: parent.width*(-1.5)
-                        y: parent.height*(-.15)
-                        color: "transparent"
-                        radius: parent.height*.1
-
-                        Image {
-                            source: "/custom/img/UnderLineIcon.svg"
-                            height: parent.height*.85
-                            width: parent.width
-                            anchors.centerIn: parent
 
                             ColorOverlay{
+                                id:coloroverid
                                 anchors.fill: parent
-                                source: parent
-                                color:qgcPal.buttonHighlight
+                                source: userprofileimg
+                                color:"transparent"
                             }
                         }
                     }
                 }
             }
+
+            // TableViewColumn {
+            //     role: "underline"
+            //     title: "underline"
+            //     width: tableviewcomp.width
+
+            //     delegate: Item {
+            //         Rectangle {
+            //             width: parent.width*5
+            //             height: parent.height*.04
+            //             x: parent.width*(-1.5)
+            //             y: parent.height*(-.15)
+            //             color: "transparent"
+            //             radius: parent.height*.1
+
+            //             Image {
+            //                 source: "/custom/img/UnderLineIcon.svg"
+            //                 height: parent.height*.85
+            //                 width: parent.width
+            //                 anchors.centerIn: parent
+
+            //                 ColorOverlay{
+            //                     anchors.fill: parent
+            //                     source: parent
+            //                     color:qgcPal.buttonHighlight
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
 
 
             headerDelegate: Rectangle {
-                height: tableviewcomp.height*0.08
+                height: tableviewcomp.height*0.1
                 width: tableviewcomp.width
                 color: "transparent"
 
@@ -265,8 +275,14 @@ Item {
                         text: qsTr("Vehicle ID")
                         color: qgcPal.text
                         anchors.centerIn: parent
+                        font.pixelSize: rect1.height*0.45
 
                     }
+                    MouseArea {
+                        anchors.fill: parent
+                        drag.target: null // Disable dragging
+                    }
+                    
                 }
                 Rectangle{
                     id:rect2
@@ -281,8 +297,14 @@ Item {
                         text: qsTr("Firmware Type")
                         color: qgcPal.text
                         anchors.centerIn: parent
+                        font.pixelSize: rect1.height*0.45
 
                     }
+                    MouseArea {
+                        anchors.fill: parent
+                        drag.target: null // Disable dragging
+                    }
+                    
                 }
                 Rectangle{
                     id:rect3
@@ -297,6 +319,10 @@ Item {
                         text: qsTr("Vehicle Type")
                         color: qgcPal.text
                         anchors.centerIn: parent
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        drag.target: null // Disable dragging
                     }
                 }
 
@@ -313,6 +339,10 @@ Item {
                         color: qgcPal.text
                         anchors.centerIn: parent
                     }
+                    MouseArea {
+                        anchors.fill: parent
+                        drag.target: null // Disable dragging
+                    }
                 }
 
 
@@ -320,20 +350,119 @@ Item {
 
             }
 
-            rowDelegate: Item {
-                height: tableviewcomp.height/7//64//parent.height*4 // Set the height of each row
+            rowDelegate: Rectangle {
+                id:rowdelegateid
+                height: tableviewcomp.height/11//64//parent.height*4 // Set the height of each row
+                color: "transparent"
+
+
 
                 MouseArea {
+                    id: mouseArea
                     anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+
+                    hoverEnabled: true
+
+                    onHoveredChanged: {
+                        if(containsMouse){
+                            rowdelegateid.color = model ?qgcPal.windowShadeLight : "transparent"
+
+                        }
+                        else{
+                            rowdelegateid.color = "transparent"
+                        }
+                    }
+
+                    onPressed: {
+                        rowdelegateid.color = model ?qgcPal.windowShadeLight : "transparent"
+                    }
+
+                    onReleased: {
+                        rowdelegateid.color = "transparent"
+                    }
+
+
                     onClicked: {
-                        var vechile = QGroundControl.multiVehicleManager.getVehicleById(model.vehid)
-                        QGroundControl.multiVehicleManager.activeVehicle = vechile
+                        for (var i = 0; i < droneModel.count; i++) {
+                            droneModel.setProperty(i, "selected", "/custom/img/DroneUnselectIcon.png");
+                        }
+                        droneModel.setProperty(model.row, "selected", "/custom/img/DroneSelectIcon.png");
+
+                        var vehicle = QGroundControl.multiVehicleManager.getVehicleById(model.vehid);
+                        QGroundControl.multiVehicleManager.activeVehicle = vehicle;
+                        droneSelected();
+                    }
+                }
+
+
+            }
+
+        }
+
+        Rectangle{
+            id:popuprectid
+            height: parent.height*0.2
+            width: parent.width*0.8
+            color: "transparent"
+            anchors.centerIn: parent
+            Text {
+                id: txtid
+                text: qsTr("No Vehicle Connected ")
+                color: qgcPal.buttonHighlight
+                font.pixelSize: parent.width*0.02
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Rectangle{
+                id: dashboardbtn
+                height: parent.height*0.4
+                width: parent.width*0.13
+                color: qgcPal.buttonHighlight
+                border.color:qgcPal.windowShadeDark
+                anchors.top: txtid.bottom
+                anchors.topMargin: parent.height*0.2
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Text {
+                    id: txtid1
+                    text: qsTr("Dashboard")// This is available in all editors.
+                    anchors.centerIn: parent
+                    color: qgcPal.text
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
+
+                    onHoveredChanged: {
+                        if(containsMouse){
+                            dashboardbtn.opacity = 0.7
+                        }
+                        else{
+                            dashboardbtn.opacity = 1
+                        }
+                    }
+
+
+                    onPressed: {
+                        dashboardbtn.opacity = 0.5
+                    }
+
+                    onReleased: {
+                        dashboardbtn.opacity = 1
+                    }
+
+                    onClicked: {
                         droneSelected()
                     }
                 }
             }
         }
+    }
 
+    Component.onCompleted: {
+        popuprectid.visible = true;
     }
 
 

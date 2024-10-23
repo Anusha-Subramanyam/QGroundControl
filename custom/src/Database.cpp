@@ -311,3 +311,41 @@ void Database::editData(int index,QString userID, QString pass, QString role)
     }
 }
 
+void Database::setInactivityTimeout(int timeSecs)
+{
+    qDebug()<<"Editing Inactivity Timeout";
+    if(openDB() != SUCCESS){
+        qDebug()<<"DB Open Failed while editing inactivity timeout";
+    }else{
+        QSqlQuery sql;
+        sql.prepare("UPDATE Settings SET InactivityTimeout = ?");
+        sql.addBindValue(timeSecs);
+
+        if(!sql.exec()){
+            qDebug()<<"Query Failed";
+        }else{
+            qDebug()<<"Changed Inactivity Timeout to "<<timeSecs;
+        }
+    }
+}
+
+int Database::getInactivityTimeout()
+{
+    qDebug()<<"Reading Inactivity Timeout";
+    int timeout = 0;
+    if(openDB() != SUCCESS){
+        qDebug()<<"DB Open Failed while reading inactivity timeout";
+    }else{
+        QSqlQuery sql;
+        sql.prepare("SELECT * FROM Settings");
+        if(!sql.exec()){
+            qDebug()<<"Query Failed";
+        }else{
+            while(sql.next()){
+                timeout = sql.value(0).toInt();
+            }
+        }
+    }
+    return timeout;
+}
+

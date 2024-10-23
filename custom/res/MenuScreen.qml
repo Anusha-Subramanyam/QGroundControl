@@ -1,4 +1,4 @@
-import QtQuick          2.12
+import QtQuick          2.15
 import QtQuick.Controls 2.4
 import QtQuick.Layouts  1.11
 import QtQuick.Dialogs  1.3
@@ -14,8 +14,29 @@ import QGroundControl.Controllers           1.0
 Item {
     property bool drawerStatus: false
     signal gcsClicked()
+    signal dronelistclicked()
+    property alias paramTimer: dashTimer
 
-    //property alias modelTimer: parametermodeltimer
+    property alias dashboardRect:dashboardRect
+    property alias gcsRect: gcsRect
+    property alias usersRect: usersRect
+    property alias rolesRect: rolesRect
+    property alias inactivityRect: inactivityRect
+
+    property int flag1: 0
+
+    Connections{
+        target: userroleperm
+
+        function onRoleUpdated(rolename){
+            userdetails.userrolemodel.combobox.model.append({name: rolename})
+        }
+
+        function onRoleChanged(rowIndex,newName){
+            userdetails.userrolemodel.combobox.model.setProperty(rowIndex, "name", newName);
+            //userdetails.userrolemodel.combobox
+        }
+    }
 
     function defaultDashboardSelect(){
         //parametermodeltimer.start()
@@ -45,16 +66,30 @@ Item {
         userinactivity.enabled = false
     }
 
-    // Timer{
-    //     id: parametermodeltimer
-    //     repeat: true
-    //     running: false
-    //     interval: 200
+    Timer{
+        id: dashTimer
+        repeat: true
+        running: false
+        interval: 300
 
-    //     onTriggered: {
-    //         dashboard.populateData()
-    //     }
-    // }
+        onTriggered: {
+            console.log("TRIGGGGGGGGGGGGGGGGGGGGGG")
+            switch(dashboard.parameterlistCnt){
+            case 0:
+                dashboard.populateData1()
+                break;
+            case 1:
+                dashboard.populateData2()
+                break;
+            case 2:
+                dashboard.populateData3()
+                break;
+            default:
+                break;
+            }
+
+        }
+    }
 
     Rectangle{
         id: mainRect
@@ -91,6 +126,7 @@ Item {
 
                 MouseArea{
                     id: menubuttonmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill: parent
 
                     onClicked: {
@@ -159,6 +195,7 @@ Item {
 
                 MouseArea{
                     id: logoutmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill:parent
                     onPressed: {
                         logout.opacity = 0.5
@@ -209,6 +246,58 @@ Item {
                         width: parent.width
                         color: qgcPal.buttonHighlight
 
+                        Timer {
+                            id: holdTimer1
+                            interval: 500
+                            repeat: false
+                            running: false
+                            onTriggered: {
+                                switch (flag1) {
+                                case 1:
+                                    popupText.text = dashtxtid.text
+                                    popup.x = roletxtid.x + parent.width*0.18
+                                    popup.y = dashtxtid.y + parent.height*1.8
+                                    popup.open()
+                                    console.log("flag1.....................................")
+                                    break;
+                                case 2:
+                                    popupText.text = gcstxtid.text
+                                    popup.x = roletxtid.x + parent.width*0.18
+                                    popup.y = gcstxtid.y + parent.height*3
+                                    popup.open()
+                                    console.log("flag2.....................................")
+                                    break;
+                                    // Add more cases as needed
+
+                                case 3:
+                                    popupText.text = usertxtid.text
+                                    popup.x = roletxtid.x + parent.width*0.18
+                                    popup.y = usertxtid.y + parent.height*4
+                                    popup.open()
+                                    console.log("flag3.....................................")
+                                    break;
+
+                                case 4:
+                                    popupText.text = roletxtid.text
+                                    popup.x = roletxtid.x + parent.width*0.18
+                                    popup.y = roletxtid.y + parent.height*5.1
+                                    popup.open()
+                                    console.log("flag4.....................................")
+                                    break;
+                                case 5:
+                                    popupText.text = inacttxtid.text
+                                    popup.x = roletxtid.x + parent.width*0.18
+                                    popup.y = inacttxtid.y + parent.height*6.2
+                                    popup.open()
+                                    console.log("flag5.....................................")
+                                    break;
+                                default:
+                                    console.log("Default case.....................................")
+                                    break;
+                                }
+                            }
+                        }
+
                         Image{
                             id:img1
                             source: "/custom/img/Dashboard.png"
@@ -238,13 +327,33 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
+
+                            onEntered:{
+                                console.log("DASH ENTEREDDDDDDDDDDDDDDDDDDDDDD")
+                                flag1 = 1
+                                holdTimer1.start()
+                                console.log(flag1)
+                            }
+
+                            onExited: {
+                                console.log("DASH EXITEDDDDDDDDDDD")
+                                holdTimer1.stop()
+                                popup.close()
+                                flag1 = 0
+                                console.log(flag1)
+                            }
+
                             onHoveredChanged: {
                                 if(dashtxtid.font.bold == false){
+                                    console.log("CHANGE......")
                                     if(containsMouse){
+                                        console.log("IN......")
                                         dashboardRect.color = qgcPal.buttonHighlight
                                         dashtxtid.color = qgcPal.buttonHighlightText
                                     }else{
+                                        console.log("OUT......")
                                         dashboardRect.color = "transparent"
                                         dashtxtid.color = qgcPal.buttonText
                                     }
@@ -260,8 +369,7 @@ Item {
                             }
 
                             onClicked: {
-                                //parametermodeltimer.start()
-                                dashboard.populateData()
+                                paramTimer.start()
                                 dashtxtid.font.bold = true
                                 gcstxtid.font.bold = false
                                 usertxtid.font.bold = false
@@ -287,6 +395,7 @@ Item {
                                 userinactivity.visible = false
                                 userinactivity.enabled = false
                             }
+
                         }
                     }
 
@@ -324,6 +433,7 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
                             onHoveredChanged: {
                                 if(gcstxtid.font.bold == false){
@@ -345,7 +455,18 @@ Item {
                             }
                             onClicked: {
                                 gcsClicked()
+                                dashTimer.stop()
                                 //parametermodeltimer.stop()
+                            }
+                            onEntered:{
+                                flag1 = 2
+                                holdTimer1.start()
+                            }
+
+                            onExited: {
+                                holdTimer1.stop()
+                                popup.close()
+                                flag1 = 0
                             }
                         }
                     }
@@ -385,6 +506,7 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
                             onHoveredChanged: {
                                 if(usertxtid.font.bold == false){
@@ -405,7 +527,7 @@ Item {
                                 usersRect.opacity = 1
                             }
                             onClicked: {
-                                //parametermodeltimer.stop()
+                                dashTimer.stop()
                                 dashtxtid.font.bold = false
                                 gcstxtid.font.bold = false
                                 usertxtid.font.bold = true
@@ -430,6 +552,17 @@ Item {
                                 userroleperm.enabled = false
                                 userinactivity.visible = false
                                 userinactivity.enabled = false
+                            }
+
+                            onEntered:{
+                                flag1 = 3
+                                holdTimer1.start()
+                            }
+
+                            onExited: {
+                                holdTimer1.stop()
+                                popup.close()
+                                flag1 = 0
                             }
                         }
                     }
@@ -469,6 +602,7 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
                             onHoveredChanged: {
                                 if(roletxtid.font.bold ==false){
@@ -489,7 +623,7 @@ Item {
                                 rolesRect.opacity = 1
                             }
                             onClicked: {
-                                //parametermodeltimer.stop()
+                                dashTimer.stop()
                                 dashtxtid.font.bold = false
                                 gcstxtid.font.bold = false
                                 usertxtid.font.bold = false
@@ -514,6 +648,16 @@ Item {
                                 userroleperm.enabled = true
                                 userinactivity.visible = false
                                 userinactivity.enabled = false
+                            }
+                            onEntered:{
+                                flag1 = 4
+                                holdTimer1.start()
+                            }
+
+                            onExited: {
+                                holdTimer1.stop()
+                                popup.close()
+                                flag1 = 0
                             }
                         }
                     }
@@ -553,6 +697,7 @@ Item {
 
                         MouseArea{
                             anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
                             onHoveredChanged: {
                                 if(inacttxtid.font.bold == false){
@@ -573,7 +718,8 @@ Item {
                                 inactivityRect.opacity = 1
                             }
                             onClicked: {
-                                //parametermodeltimer.stop()
+                                dashTimer.stop()
+                                userinactivity.timecombobox.currentIndex = 0
                                 dashtxtid.font.bold = false
                                 gcstxtid.font.bold = false
                                 usertxtid.font.bold = false
@@ -599,9 +745,43 @@ Item {
                                 userinactivity.visible = true
                                 userinactivity.enabled = true
                             }
+
+                            onEntered:{
+                                flag1 = 5
+                                holdTimer1.start()
+                            }
+
+                            onExited: {
+                                holdTimer1.stop()
+                                popup.close()
+                                flag1 = 0
+                            }
                         }
                     }
 
+                }
+            }
+        }
+
+
+
+        Popup {
+            id: popup
+            modal: false
+            focus: true
+            closePolicy: Popup.CloseOnEscape
+            background: null
+            Rectangle {
+                width: popupText.implicitWidth + 20
+                height: popupText.implicitHeight + 20
+                color: qgcPal.text
+                radius: 10
+
+                Text {
+                    id: popupText
+                    font.pointSize: 8
+                    color: qgcPal.windowShadeDark
+                    anchors.centerIn: parent
                 }
             }
         }
@@ -612,6 +792,28 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: (drawerStatus == true) ? content.width*0.17 : content.width*0.04
             anchors.top: header.bottom
+
+            dronelistmouseareaid.onClicked: {
+                console.log("dashboardsignal fire")
+                dronelistclicked()
+            }
+
+            generatereportmousearea.onClicked: {
+                if(QGroundControl.multiVehicleManager.vehicles.count>0){
+                    missionhistory.visible = true
+                    missionhistory.enabled = true
+                    mainRect.visible = false
+                    mainRect.enabled = false
+                }else{
+                    mainWindow.showMessageDialog("Generate Report",
+                                                 qsTr("You must be connected to a vehicle in order to generate report"),
+                                                 StandardButton.Ok,
+                                                 function() {
+
+                                                 })
+                }
+
+            }
         }
 
         UserData{
@@ -637,6 +839,19 @@ Item {
                 header.opacity = 1
                 content.opacity = 1
             }
+
+            Component.onCompleted: {
+                console.log("Emitteddddd")
+                var roles = opCls.getInitialRoles()
+                if(roles.length != 0){
+                    userrolemodel.combobox.model.clear()
+                    for(var i=0;i<roles.length;i++){
+                        userrolemodel.combobox.model.append({name:roles[i]})
+                    }
+                }
+            }
+
+
         }
 
         UserRolePermMapping{
@@ -687,6 +902,20 @@ Item {
                                                  opCls.handleInactiveChanged(intvl)
                                              })
             }
+        }
+    }
+
+    MissionHistory{
+        id: missionhistory
+        anchors.fill:parent
+        visible: false
+        enabled: false
+
+        backbtnmousearea.onClicked:{
+            mainRect.visible = true
+            mainRect.enabled = true
+            missionhistory.visible = false
+            missionhistory.enabled = false
         }
     }
 }

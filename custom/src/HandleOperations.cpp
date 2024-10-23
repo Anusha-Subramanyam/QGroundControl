@@ -35,6 +35,9 @@ HandleOperations::HandleOperations(QObject *parent)
 
     if(db->initDB() == SUCCESS){
     }
+    qDebug()<<"BEFORE: "<<intactInterval;
+    intactInterval = db->getInactivityTimeout();
+    qDebug()<<"AFTER: "<<intactInterval;
 }
 
 void HandleOperations::handleUserDataFromDB()
@@ -86,27 +89,27 @@ void HandleOperations::parseJSON()
 
         qDebug()<<"RoleId in JSON: "<<roleId;
         qDebug()<<"RoleName in JSON: "<<roleName;
-        QMap<QString, QStringList> screenPerm;
+        //QMap<QString, QStringList> screenPerm;
 
-        for (const QString &screen : permission.keys()) {
-            QJsonArray permissionsArray = permission.value(screen).toArray();
-            QStringList permissions;
+        // for (const QString &screen : permission.keys()) {
+        //     QJsonArray permissionsArray = permission.value(screen).toArray();
+        //     QStringList permissions;
 
-            qDebug()<<"Screen Permissions in JSON: "<<screen;
+        //     qDebug()<<"Screen Permissions in JSON: "<<screen;
 
-            for (const QJsonValue &permission : permissionsArray) {
-                QString permissionString = permission.toString();
-                if (permissionString == "*") {
-                    permissions << "*";  // Indicating full access to the screen
-                } else {
-                    permissions << permissionString;
-                }
-                qDebug()<<screen<<" "<<permissionString;
-            }
-            screenPerm.insert(screen, permissions);
-        }
+        //     for (const QJsonValue &permission : permissionsArray) {
+        //         QString permissionString = permission.toString();
+        //         if (permissionString == "*") {
+        //             permissions << "*";  // Indicating full access to the screen
+        //         } else {
+        //             permissions << permissionString;
+        //         }
+        //         qDebug()<<screen<<" "<<permissionString;
+        //     }
+        //     //screenPerm.insert(screen, permissions);
+        // }
         rolepermModel->addRoleData(roleId,roleName,roleDescription,permission);
-        rolePermissions.insert(roleId,screenPerm);
+        //rolePermissions.insert(roleId,screenPerm);
     }
     qDebug()<<"Length: "<<rolenames.length();
     qDebug()<<"Data:"<<rolenames;
@@ -123,7 +126,7 @@ QStringList HandleOperations::getPermListBasedonScreen(QString screenName)
     qDebug()<<"Value Returned: "<<screenPerm.value(screenName);
 }
 
-QStringList HandleOperations::getScreenNames()
+QStringList HandleOperations::getScreenNames()       //Not in use currently
 {
     QStringList screenNames;
     screenNames = screenPerm.keys();
@@ -152,12 +155,13 @@ void HandleOperations::handleManualLogout()
     elapsedTime.invalidate();
 }
 
-void HandleOperations::userRegistration(QString user, QString pwd, QString role)
+void HandleOperations::userRegistration(QString user, QString pwd, int role)
 {
+    QString roleID = rolepermModel->getRoleData(role).value("roleid").toString();
     QString userSince = QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
-    roleModel->addData(user,pwd,0,role,userSince,"-");
+    roleModel->addData(user,pwd,0,roleID,userSince,"-");
     QString encyptPass = crypto->encryption(pwd);
-    db->addUser(user,encyptPass,role,userSince);
+    db->addUser(user,encyptPass,roleID,userSince);
 }
 
 void HandleOperations::handleInactiveChanged(int interval)
@@ -167,17 +171,19 @@ void HandleOperations::handleInactiveChanged(int interval)
         inactTimer.stop();
     }
     intactInterval = interval;
+    db->setInactivityTimeout(interval);
     inactTimer.start();
     elapsedTime.restart();
 }
 
-void HandleOperations::editUserData(int row, QString id, QString password, QString role)
+void HandleOperations::editUserData(int row, QString id, QString password, int role)
 {
-    db->editData(row,id,password,role);
+    QString roleID = rolepermModel->getRoleData(role).value("roleid").toString();
+    db->editData(row,id,password,roleID);
     QModelIndex ind = roleModel->index(row-1,0);
     roleModel->setData(ind,id,UserRoleModel::UserID);
     roleModel->setData(ind,password,UserRoleModel::Password);
-    roleModel->setData(ind,role,UserRoleModel::UserRole);
+    roleModel->setData(ind,roleID,UserRoleModel::UserRole);
 }
 
 QString HandleOperations::getDateTime(QString input)
@@ -188,7 +194,7 @@ QString HandleOperations::getDateTime(QString input)
     return result;
 }
 
-bool HandleOperations::addRoleConfigfile(QList<QVariant> permission_data)
+bool HandleOperations::addRoleConfigfile(QList<QVariant> permission_data, int index)
 {
     // Parse the JSON data
     QJsonParseError parseError;
@@ -213,22 +219,31 @@ bool HandleOperations::addRoleConfigfile(QList<QVariant> permission_data)
             adminRoleObj["description"] = permission_data.at(2).toString();
 
             QJsonObject permissionObj;
-            permissionObj["FlyView"] = QJsonArray(permission_data.at(3).toJsonArray());
-            permissionObj["Menu"] = QJsonArray(permission_data.at(4).toJsonArray());
+            permissionObj["Menu"] = QJsonArray(permission_data.at(3).toJsonArray());
+            permissionObj["GCS"] = QJsonArray(permission_data.at(4).toJsonArray());
             qDebug()<<"................................................................";
             qDebug()<<permission_data.at(4).Size;
             // QVariant variant = permission_data.at(4);
-            if(!permission_data.at(4).toList().isEmpty()){
+            if(!permission_data.at(5).toList().isEmpty()){
                 permissionObj["AnalyzeTools"] = QJsonArray(permission_data.at(5).toJsonArray());
             }
-            if(!permission_data.at(5).toList().isEmpty()){
+            if(!permission_data.at(6).toList().isEmpty()){
                 permissionObj["AppSettings"] = QJsonArray(permission_data.at(6).toJsonArray());
             }
 
 
             adminRoleObj["permission"] = permissionObj;
 
-            rolepermModel->addRoleData(permission_data.at(0).toString(),permission_data.at(1).toString(), permission_data.at(2).toString(),permissionObj);
+
+            if(index != -1){
+                QModelIndex ind = rolepermModel->index(index,0);
+                rolepermModel->setData(ind, permission_data.at(0).toString(),RolePermissionModel::RoleID);
+                rolepermModel->setData(ind, permission_data.at(1).toString(),RolePermissionModel::RoleName);
+                rolepermModel->setData(ind, permission_data.at(2).toString(),RolePermissionModel::RoleDescription);
+                rolepermModel->setData(ind, permissionObj,RolePermissionModel::Permissions);
+            }else{
+                rolepermModel->addRoleData(permission_data.at(0).toString(),permission_data.at(1).toString(), permission_data.at(2).toString(),permissionObj);
+            }
 
             // Add "1" to the roles object
             rolesObj[permission_data.at(0).toString()] = adminRoleObj;
@@ -320,8 +335,35 @@ QStringList HandleOperations::getInitialRoles()
 void HandleOperations::getPermissions(QString roleId)
 {
     qDebug()<<"Get Permissions based on ROLE ID: "<<roleId;
+    // screenPerm.clear();
+    // screenPerm = rolePermissions.value(roleId);
+
     screenPerm.clear();
-    screenPerm = rolePermissions.value(roleId);
+    int index = rolepermModel->getModelIndex(roleId);
+    if(index != -1){
+        QVariantMap data = rolepermModel->getRoleData(index);
+        QJsonObject dataval = data.value("perm").toJsonObject();
+
+        for (const QString &screen : dataval.keys()) {
+            QJsonArray permissionsArray = dataval.value(screen).toArray();
+            QStringList permissions;
+
+            qDebug()<<"Screen Permissions in JSON: "<<screen;
+
+            for (const QJsonValue &permission : permissionsArray) {
+                QString permissionString = permission.toString();
+                if (permissionString == "*") {
+                    permissions << "*";  // Indicating full access to the screen
+                } else {
+                    permissions << permissionString;
+                }
+                qDebug()<<screen<<" "<<permissionString;
+            }
+            screenPerm.insert(screen, permissions);
+        }
+
+    }
+
     qDebug()<<"Value Returned: "<<screenPerm;
 }
 

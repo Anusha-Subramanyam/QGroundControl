@@ -81,8 +81,8 @@ Item {
                 Image{
                     id: create
                     source: "/custom/img/AddRole.png"
-                    width: parent.height*0.7
-                    height: parent.height*0.7
+                    width: parent.width*0.2
+                    height: parent.width*0.2
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: parent.height*0.6
@@ -91,15 +91,27 @@ Item {
                 Text {
                     text: qsTr("Add Role")
                     color: qgcPal.text
-                    font.pixelSize: parent.height*.38
+                    font.pixelSize: parent.width*.1
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: create.right
-                    anchors.leftMargin: parent.height*0.25
+                    anchors.leftMargin: parent.width*.1
                 }
 
                 MouseArea{
                     id: createbtnmousearea
+                    cursorShape: Qt.PointingHandCursor
                     anchors.fill: parent
+
+                    hoverEnabled: true
+
+                    onHoveredChanged: {
+                        if(containsMouse){
+                            createbtn.opacity = 0.7
+                        }
+                        else{
+                            createbtn.opacity = 1
+                        }
+                    }
                     onPressed: {
                         createbtn.opacity = 0.5
                     }
@@ -161,6 +173,49 @@ Item {
                 }
 
                 Rectangle{
+                    id: cross
+                    height: parent.height
+                    width: parent.width*0.08
+                    color: "transparent"
+                    anchors.left: searchval.right
+                    anchors.right: searchbtn.left
+                    Text {
+                        id:txt1id
+                        text: qsTr("+")
+                        rotation: 45
+                        color: qgcPal.text
+                        anchors.centerIn: parent
+                        font.pixelSize: parent.width*0.5
+                    }
+                    MouseArea{
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+
+                        onHoveredChanged: {
+                            if(containsMouse){
+                                cross.opacity = 0.7
+                            }
+                            else{
+                                cross.opacity = 1
+                            }
+                        }
+
+
+                        onPressed: {
+                            cross.opacity = 0.5
+                        }
+
+                        onReleased: {
+                            cross.opacity = 1
+                        }
+                        onClicked: {
+                            searchval.text = ""
+                        }
+                    }
+                }
+
+                Rectangle{
                     id: searchbtn
                     width: parent.width*0.2
                     height: parent.height*0.95
@@ -180,6 +235,17 @@ Item {
 
                     MouseArea{
                         anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+
+                        onHoveredChanged: {
+                            if(containsMouse){
+                                searchbtn.opacity = 0.7
+                            }
+                            else{
+                                searchbtn.opacity = 1
+                            }
+                        }
                         onPressed: {
                             searchbtn.opacity = 0.5
                         }
@@ -217,7 +283,7 @@ Item {
                     TableViewColumn {
                         role: "roleid"
                         title: "roleid"
-                        width: parent.width*.05
+                        width: tableviewcomp.width*.0625
 
                         delegate: Item {
                             Rectangle {
@@ -241,7 +307,7 @@ Item {
                     TableViewColumn {
                         role: "rolename"
                         title: "rolename"
-                        width: parent.width*.17
+                        width: tableviewcomp.width*.211
 
                         delegate: Item {
                             Rectangle {
@@ -267,7 +333,7 @@ Item {
                     TableViewColumn {
                         role: "roledesp"
                         title: "roledesp"
-                        width: parent.width*.43
+                        width: tableviewcomp.width*.534
 
 
                         delegate: Item {
@@ -294,9 +360,10 @@ Item {
                     TableViewColumn {
                         role: "editrole"
                         title: "editrole"
-                        width: parent.width*.156
+                        width: tableviewcomp.width*.194
 
                         delegate: Item {
+                            anchors.fill: parent
                             Rectangle {
                                 id: editrolebtn
                                 width: parent.width
@@ -310,6 +377,7 @@ Item {
                                 }
                                 MouseArea{
                                     id: editrolebtnmousearea
+                                    cursorShape: Qt.PointingHandCursor
                                     anchors.fill: parent
 
                                     onPressed: {
@@ -457,6 +525,11 @@ Item {
                                 anchors.centerIn: parent
 
                             }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                drag.target: null // Disable dragging
+                            }
                         }
                         Rectangle{
                             id:rect2
@@ -473,6 +546,10 @@ Item {
                                 anchors.centerIn: parent
 
                             }
+                            MouseArea {
+                                anchors.fill: parent
+                                drag.target: null // Disable dragging
+                            }
                         }
                         Rectangle{
                             id:rect3
@@ -488,6 +565,10 @@ Item {
                                 color: qgcPal.text
                                 anchors.centerIn: parent
                             }
+                            MouseArea {
+                                anchors.fill: parent
+                                drag.target: null // Disable dragging
+                            }
                         }
 
                         Rectangle{
@@ -502,7 +583,11 @@ Item {
                                 id: selected
                                 text: qsTr("Edit")
                                 color: qgcPal.text
-                               anchors.centerIn: parent
+                                anchors.centerIn: parent
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                drag.target: null // Disable dragging
                             }
                         }
 
@@ -657,7 +742,7 @@ Item {
         //     }
         // }
 
-            }
+    }
 
     RoleRegistration{
         id: roleregister
@@ -671,7 +756,7 @@ Item {
                     if(rolepermModel.roleExists(roleID) == -1){
                         closeEdit()
                         formRoleJson()
-                        opCls.addRoleConfigfile(maincontainer);
+                        opCls.addRoleConfigfile(maincontainer, -1);
                         //add role in dropdown
                         roleUpdated(roleName);
                         roleregister.visible = false
@@ -691,10 +776,20 @@ Item {
                                                      function() {
                                                          formRoleJson()
                                                          opCls.deleteRoleConfigfile(rowid)
-                                                         rolepermModel.deleteRoles(rowSelected)
-                                                         opCls.addRoleConfigfile(maincontainer)
+                                                         //rolepermModel.deleteRoles(rowSelected)
+                                                         opCls.addRoleConfigfile(maincontainer,rowSelected)
                                                          if(roleName != rowname){
-                                                            roleChanged(rowSelected,roleName)
+                                                             roleChanged(rowSelected,roleName)
+                                                         }
+
+                                                         if(roleModel.getCurrentSelectedRole() == "RID1"){
+                                                             mainWindow.showMessageDialog("Re-Login to Apply Changes.",
+                                                                                          qsTr("You have to login agian"),
+                                                                                          StandardButton.Ok,
+                                                                                          function() {
+                                                                                              mainWindow.logoutFlag = true
+                                                                                              mainWindow.checkForUnsavedMission()
+                                                                                          })
                                                          }
 
                                                          //delete the user

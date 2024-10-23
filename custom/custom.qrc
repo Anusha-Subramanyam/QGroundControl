@@ -17,7 +17,6 @@
         <file alias="AddRole.png">res/Images/AddRole.png</file>
         <file alias="AddUser.png">res/Images/AddUser.png</file>
         <file alias="Background.png">res/Images/Background.png</file>
-        <file alias="DeleteIcn.svg">res/Images/DeleteIcn.svg</file>
         <file alias="HidePassword.png">res/Images/HidePassword.png</file>
         <file alias="InactiveTimeIcn.png">res/Images/InactiveTimeIcn.png</file>
         <file alias="/InactiveUserIcn.png">res/Images/InactiveUserIcn.png</file>
@@ -36,6 +35,11 @@
         <file alias="TaraLogo.png">res/Images/TaraLogo.png</file>
         <file alias="GenerateIcon.png">res/Images/GenerateIcon.png</file>
         <file alias="downarrow.png">res/Images/downarrow.png</file>
+        <file alias="arrow.png">res/Images/arrow.png</file>
+        <file alias="DroneSelectIcon.png">res/Images/DroneSelectIcon.png</file>
+        <file alias="DroneUnselectIcon.png">res/Images/DroneUnselectIcon.png</file>
+        <file alias="SelectDroneIcon.png">res/Images/SelectDroneIcon.png</file>
+        <file alias="DeleteIcn.png">res/Images/DeleteIcn.png</file>
     </qresource>
     <qresource prefix="/qmlimages">
         <file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>
@@ -68,5 +72,6 @@
         <file alias="Dashboard.qml">res/Dashboard.qml</file>
         <file alias="MenuScreen.qml">res/MenuScreen.qml</file>
         <file alias="ActiveDroneScreen.qml">res/ActiveDroneScreen.qml</file>
+        <file alias="MissionHistory.qml">res/MissionHistory.qml</file>
     </qresource>
 </RCC>

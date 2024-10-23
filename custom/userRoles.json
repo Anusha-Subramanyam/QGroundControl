@@ -23,19 +23,22 @@
                     "Debug",
                     "PaletteTest"
                 ],
-                "FlyView": [
+                "GCS": [
                     "Planning",
                     "Telemetry",
-                    "Dashboard"
-                ],
-                "Menu": [
                     "VehicleSetup",
                     "AnalyzeTools",
-                    "AppSettings",
-                    "ManageUsers"
+                    "AppSettings"
+                ],
+                "Menu": [
+                    "Dashboard",
+                    "GCS",
+                    "Users",
+                    "UserRoles",
+                    "InactivitySettings"
                 ]
             },
-            "role": "Manager"
+            "role": "Manager1"
         },
         "RID2": {
             "description": "Handles Mission Execution and operational functionalities.",
@@ -59,20 +62,23 @@
                     "Debug",
                     "PaletteTest"
                 ],
-                "FlyView": [
+                "GCS": [
                     "Planning",
-                    "Telemetry"
-                ],
-                "Menu": [
+                    "Telemetry",
                     "VehicleSetup",
                     "AnalyzeTools",
                     "AppSettings"
+                ],
+                "Menu": [
+                    "Dashboard",
+                    "GCS",
+                    "Users"
                 ]
             },
             "role": "Pilot"
         },
         "RID3": {
-            "description": "Handles Maintenance and diagnostics functionalities at its best.",
+            "description": "Handles Maintenance and diagnostics functionalities.",
             "permission": {
                 "AnalyzeTools": [
                     "LogDownLoad",
@@ -81,16 +87,72 @@
                     "MavInsp",
                     "Vibration"
                 ],
-                "AppSettings": [
-                ],
-                "FlyView": [
-                    "Telemetry"
+                "GCS": [
+                    "Planning",
+                    "Telemetry",
+                    "AnalyzeTools"
                 ],
                 "Menu": [
-                    "AnalyzeTools"
+                    "Dashboard",
+                    "GCS"
                 ]
             },
             "role": "Technician"
+        },
+        "RID4": {
+            "description": "New Role 1",
+            "permission": {
+                "AppSettings": [
+                    "General",
+                    "CommLinks",
+                    "OfflineMaps",
+                    "MavLink",
+                    "RemoteID",
+                    "Console",
+                    "Help",
+                    "MockLink",
+                    "Debug",
+                    "PaletteTest"
+                ],
+                "GCS": [
+                    "Telemetry",
+                    "VehicleSetup",
+                    "AppSettings"
+                ],
+                "Menu": [
+                    "Dashboard",
+                    "GCS",
+                    "Users",
+                    "UserRoles"
+                ]
+            },
+            "role": "NR1234567"
+        },
+        "RID5": {
+            "description": "Newest Role",
+            "permission": {
+                "GCS": [
+                    "Planning"
+                ],
+                "Menu": [
+                    "Dashboard",
+                    "GCS"
+                ]
+            },
+            "role": "Newest"
+        },
+        "RID6": {
+            "description": "Newwwwwwwwwwwwwwwwwwwwww",
+            "permission": {
+                "GCS": [
+                    "Planning"
+                ],
+                "Menu": [
+                    "Dashboard",
+                    "GCS"
+                ]
+            },
+            "role": "NEWWWWWWW"
         }
     }
 }
