@@ -231,9 +231,7 @@ bool HandleOperations::addRoleConfigfile(QList<QVariant> permission_data, int in
                 permissionObj["AppSettings"] = QJsonArray(permission_data.at(6).toJsonArray());
             }
 
-
             adminRoleObj["permission"] = permissionObj;
-
 
             if(index != -1){
                 QModelIndex ind = rolepermModel->index(index,0);

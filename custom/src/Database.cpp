@@ -6,7 +6,7 @@ Database *Database::instance = nullptr;
 Database::Database(QObject *parent)
     : QObject{parent}
 {
-    dbase = QSqlDatabase::addDatabase("QSQLITE");
+    dbase = QSqlDatabase::addDatabase("SQLITECIPHER");
     dbase.setDatabaseName(DBPATH);
 }
 
@@ -35,6 +35,8 @@ int8_t Database::openDB()
         if(false == dbase.open()){
             status = FAILURE;
         }else{
+            // QSqlQuery query(dbase);
+            // query.exec("PRAGMA key = '123';");
             status = SUCCESS;
         }
     }
@@ -75,6 +77,8 @@ int8_t Database::createDatabase(QString templatePath)
                     delete qry;
 
                 }
+                // QSqlQuery keyQuery(dbase);
+                // keyQuery.exec("PRAGMA key = '123';");
             }
 
         }
@@ -349,3 +353,49 @@ int Database::getInactivityTimeout()
     return timeout;
 }
 
+void Database::insertMissionHistory(QVariantList data)
+{
+    qDebug()<<"Adding Mission History Data";
+    if(openDB() != SUCCESS){
+        qDebug()<<"DB Open Failed while adding mission history data";
+    }else{
+        QSqlQuery sql;
+        sql.prepare("INSERT INTO CustomReportData (VehicleID , VehicleType , FirmwareType, MissionTime) VALUES (? ,? ,?,?)");
+        sql.addBindValue(data.at(0));
+        sql.addBindValue(data.at(1));
+        sql.addBindValue(data.at(2));
+        sql.addBindValue(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
+        if(!sql.exec()){
+            qDebug()<<"Query Failed";
+        }else{
+            qDebug()<<"Succesful Adding of Mission History Data";
+        }
+    }
+}
+
+QVariantList Database::readMissionHistory(QString vehID, bool flag)
+{
+    qDebug()<<"Reading Mission History Data "<<flag<<" "<<vehID;
+    QVariantList results;
+    QSqlQuery sql;
+    if(flag == true){
+        sql.prepare("SELECT * FROM CustomReportData WHERE VehicleID = ?");
+        sql.addBindValue(vehID);
+    }else{
+        sql.prepare("SELECT VehicleID, VehicleType, MissionTime FROM CustomReportData WHERE VehicleID = ?");
+        sql.addBindValue(vehID);
+    }
+    if(sql.exec()){
+        while (sql.next()) {
+            QStringList row;  // To store the columns of the current row
+            for (int i = 0; i < sql.record().count(); ++i) {
+                row << sql.value(i).toString();  // Append each column value to the row
+            }
+            results << row;
+        }
+    }
+    else{
+        qDebug()<<"UnSuccesful Reading of Mission History Data";
+    }
+    return results;
+}

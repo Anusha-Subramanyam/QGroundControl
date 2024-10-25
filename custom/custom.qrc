@@ -40,6 +40,7 @@
         <file alias="DroneUnselectIcon.png">res/Images/DroneUnselectIcon.png</file>
         <file alias="SelectDroneIcon.png">res/Images/SelectDroneIcon.png</file>
         <file alias="DeleteIcn.png">res/Images/DeleteIcn.png</file>
+        <file alias="download.png">res/Images/download.png</file>
     </qresource>
     <qresource prefix="/qmlimages">
         <file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>

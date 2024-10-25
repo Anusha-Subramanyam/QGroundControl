@@ -46,6 +46,8 @@ public:
     void editData(int index,QString userID,QString pass, QString role);
     Q_INVOKABLE void setInactivityTimeout(int timeSecs);
     Q_INVOKABLE int getInactivityTimeout();
+    Q_INVOKABLE void insertMissionHistory(QVariantList data);
+    Q_INVOKABLE QVariantList readMissionHistory(QString vehID, bool flag);
 
 
     // QString getUserID();

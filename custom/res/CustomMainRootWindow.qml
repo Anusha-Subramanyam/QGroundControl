@@ -30,6 +30,10 @@ ApplicationWindow {
     minimumWidth: Screen.width
     minimumHeight: Screen.height
 
+    //remove later
+    property var _activeVeh: QGroundControl.multiVehicleManager.activeVehicle
+    //
+
     Component.onCompleted: {
         //-- Full screen on mobile or tiny screens
         if (ScreenTools.isMobile || Screen.height / ScreenTools.realPixelDensity < 120) {
@@ -422,6 +426,15 @@ ApplicationWindow {
         id:         toolbar
         height:     ScreenTools.toolbarHeight
         visible:    (!(QGroundControl.videoManager.fullScreen && flightView.visible)) && (!userlogin.visible)
+
+        logoutmousearea.onClicked: {
+            console.log("Forming Data from UI")
+            var paramList = []
+            paramList.push(_activeVeh.id.toString())
+            paramList.push(_activeVeh.vehicleTypeString)
+            paramList.push(_activeVeh.firmwareTypeString)
+            dstDb.insertMissionHistory(paramList)
+        }
     }
 
     footer: LogReplayStatusBar {

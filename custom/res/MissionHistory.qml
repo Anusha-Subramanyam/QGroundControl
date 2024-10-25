@@ -25,6 +25,16 @@ Item {
     property alias backbtnmousearea: backbtnmousearea
     property var _activevechile: QGroundControl.multiVehicleManager.activeVehicle
 
+    function loadMissionHistory(){
+        console.log("In LoadMission Data Function")
+        var missionData = dstDb.readMissionHistory(_activevechile.id.toString(), false);
+        historyModel.clear()
+        for(var i=0;i<missionData.length;i++){
+            console.log("Missions data: ",i," ",missionData[i])
+            historyModel.append({missionid: missionData[i][0], missiondate: missionData[i][1], missiontime: missionData[i][2]})
+        }
+    }
+
     Rectangle{
         id: mainRect
         anchors.fill: parent
@@ -227,8 +237,11 @@ Item {
                     anchors.topMargin: parent.width*0.03
 
                 }
+            }
 
-
+            ListModel {
+                id: historyModel
+                //ListElement{missionid: "Hii"; missiondate: "Hello"; missiontime: "Hyyy"}
             }
 
             Rectangle{
@@ -246,7 +259,7 @@ Item {
                     backgroundVisible: false
                     frameVisible: true
                     verticalScrollBarPolicy: ScrollBar.AsNeeded  // You can use ScrollBar.AlwaysOff or ScrollBar.AsNeeded as well
-                    // model: roleModel
+                    model: historyModel
                     horizontalScrollBarPolicy: ScrollBar.AlwaysOff
 
                     TableViewColumn {
@@ -261,10 +274,8 @@ Item {
                                 color: "transparent"
 
                                 Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: parent.height*0.1
-                                    text: model ? qsTr(styleData.row+1) : ""  // Display the setup or any other data
+                                    anchors.centerIn: parent
+                                    text: model ? qsTr((styleData.row+1).toString()) : ""  // Display the setup or any other data
                                     font.pixelSize: parent.height*.53
                                     color: qgcPal.text  // Set the text color
                                     clip: true
@@ -287,7 +298,9 @@ Item {
                                 color: "transparent"
 
                                 Text {
-                                    anchors.centerIn: parent
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: parent.height*0.1
                                     text: model ? model.missionid : ""
                                     font.pixelSize: parent.height*.53
                                     color: qgcPal.text  // Set the text color
@@ -310,11 +323,16 @@ Item {
                                 height: parent.height
                                 color: "transparent"
 
-                                Image {
-                                    source: model ? model.missiondate : ""
-                                    height: parent.height*.7
-                                    width: parent.height*.7
-                                    anchors.centerIn: parent
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: parent.height*0.1
+                                    text: model ? model.missiondate : ""
+                                    font.pixelSize: parent.height*.53
+                                    color: qgcPal.text  // Set the text color
+                                    clip: true
+                                    elide: Text.ElideRight
+                                    wrapMode: Text.WrapAnywhere
                                 }
                             }
                         }
@@ -362,8 +380,8 @@ Item {
 
                                 Image {
                                     source:  "/custom/img/download.png"
-                                    height: parent.height*.7
-                                    width: parent.height*.7
+                                    height: parent.height*.9
+                                    width: parent.height*.9
                                     anchors.centerIn: parent
 
                                 }
@@ -381,6 +399,7 @@ Item {
                                     }
 
                                     onClicked: {
+
                                     }
 
 
@@ -535,12 +554,16 @@ Item {
                             hoverEnabled: true
 
                             onHoveredChanged: {
-                                if(containsMouse){
-                                    rowitem.color = qgcPal.windowShadeLight
+                                if(model){
+                                    if(containsMouse){
+                                        rowitem.color = qgcPal.windowShadeLight
+                                    }
+                                    else{
+                                        rowitem.color = "transparent"
+                                    }
                                 }
-                                else{
-                                    rowitem.color = "transparent"
-                                }
+
+
                             }
                         }
                     }

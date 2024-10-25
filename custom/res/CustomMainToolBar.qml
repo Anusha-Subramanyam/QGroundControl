@@ -34,7 +34,7 @@ Rectangle {
     property color  _mainStatusBGColor: qgcPal.brandingPurple
 
     // //Added by DST
-    // property alias logoutmousearea: logoutmousearea
+     property alias logoutmousearea: logoutmousearea
     // //
 
     function dropMessageIndicatorTool() {
@@ -227,45 +227,45 @@ Rectangle {
         }
     }
 
-    // //Added by DST
-    // Rectangle{
-    //     id: logout
-    //     width:parent.height
-    //     height: parent.height
-    //     color: "transparent"
-    //     anchors.right: parent.right
-    //     anchors.rightMargin: parent.height*0.1
-    //     anchors.top:parent.top
+    //Added by DST
+    Rectangle{
+        id: logout
+        width:parent.height
+        height: parent.height
+        color: "cyan"
+        anchors.centerIn: parent
 
-    //     Image{
-    //         width: parent.width*0.5
-    //         height: parent.height*0.5
-    //         source: "/custom/img/logout.png"
-    //         anchors.horizontalCenter: parent.horizontalCenter
-    //         anchors.top: parent.top
-    //         anchors.topMargin: parent.height*0.1
-    //     }
+        // Image{
+        //     width: parent.width*0.5
+        //     height: parent.height*0.5
+        //     source: "/custom/img/logout.png"
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     anchors.top: parent.top
+        //     anchors.topMargin: parent.height*0.1
+        // }
 
-    //     Text{
-    //         text: "Logout"
-    //         font.pixelSize: parent.height*0.22
-    //         anchors.horizontalCenter: parent.horizontalCenter
-    //         anchors.bottom: parent.bottom
-    //         anchors.bottomMargin: parent.height*0.1
-    //         color: "white"
-    //     }
+        // Text{
+        //     text: "Logout"
+        //     font.pixelSize: parent.height*0.22
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     anchors.bottom: parent.bottom
+        //     anchors.bottomMargin: parent.height*0.1
+        //     color: "white"
+        // }
 
-    //     MouseArea{
-    //         id: logoutmousearea
-    //         anchors.fill:parent
-    //         onPressed: {
-    //             logout.opacity = 0.5
-    //         }
+        MouseArea{
+            id: logoutmousearea
+            anchors.fill:parent
 
-    //         onReleased: {
-    //             logout.opacity = 1
-    //         }
-    //     }
-    // }
-    // //
+
+            onPressed: {
+                logout.opacity = 0.5
+            }
+
+            onReleased: {
+                logout.opacity = 1
+            }
+        }
+    }
+    //
 }

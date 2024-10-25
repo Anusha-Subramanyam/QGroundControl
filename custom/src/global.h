@@ -28,6 +28,7 @@ typedef struct{
 #define DB_TEMPLATE_PATH "D:/QGroundControl_TaraUAV/QGroundControl/custom/db_qgc_template.sql" //"D:/QGC/qgroundcontrol/db_qgc_template.sql"
 #define CONFIG_FILE_PATH "D:/QGroundControl_TaraUAV/QGroundControl/custom/userRoles.json"
 #define USER_TABLE "UserData"
+#define ENCRYPTION_KEY "123"
 
 #define SUCCESS 0
 #define FAILURE -1

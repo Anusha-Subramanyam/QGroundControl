@@ -782,7 +782,7 @@ Item {
                                                              roleChanged(rowSelected,roleName)
                                                          }
 
-                                                         if(roleModel.getCurrentSelectedRole() == "RID1"){
+                                                         if(rowid == "RID1"){
                                                              mainWindow.showMessageDialog("Re-Login to Apply Changes.",
                                                                                           qsTr("You have to login agian"),
                                                                                           StandardButton.Ok,

@@ -331,18 +331,18 @@ Item {
                             hoverEnabled: true
 
                             onEntered:{
-                                console.log("DASH ENTEREDDDDDDDDDDDDDDDDDDDDDD")
-                                flag1 = 1
-                                holdTimer1.start()
-                                console.log(flag1)
+                                if(drawerStatus == false){
+                                    flag1 = 1
+                                    holdTimer1.start()
+                                }
                             }
 
                             onExited: {
-                                console.log("DASH EXITEDDDDDDDDDDD")
-                                holdTimer1.stop()
-                                popup.close()
-                                flag1 = 0
-                                console.log(flag1)
+                                if(drawerStatus == false){
+                                    holdTimer1.stop()
+                                    popup.close()
+                                    flag1 = 0
+                                }
                             }
 
                             onHoveredChanged: {
@@ -459,14 +459,18 @@ Item {
                                 //parametermodeltimer.stop()
                             }
                             onEntered:{
-                                flag1 = 2
-                                holdTimer1.start()
+                                if(drawerStatus == false){
+                                    flag1 = 2
+                                    holdTimer1.start()
+                                }
                             }
 
                             onExited: {
-                                holdTimer1.stop()
-                                popup.close()
-                                flag1 = 0
+                                if(drawerStatus == false){
+                                    holdTimer1.stop()
+                                    popup.close()
+                                    flag1 = 0
+                                }
                             }
                         }
                     }
@@ -555,14 +559,18 @@ Item {
                             }
 
                             onEntered:{
-                                flag1 = 3
-                                holdTimer1.start()
+                                if(drawerStatus == false){
+                                    flag1 = 3
+                                    holdTimer1.start()
+                                }
                             }
 
                             onExited: {
-                                holdTimer1.stop()
-                                popup.close()
-                                flag1 = 0
+                                if(drawerStatus == false){
+                                    holdTimer1.stop()
+                                    popup.close()
+                                    flag1 = 0
+                                }
                             }
                         }
                     }
@@ -650,14 +658,18 @@ Item {
                                 userinactivity.enabled = false
                             }
                             onEntered:{
-                                flag1 = 4
-                                holdTimer1.start()
+                                if(drawerStatus == false){
+                                    flag1 = 4
+                                    holdTimer1.start()
+                                }
                             }
 
                             onExited: {
-                                holdTimer1.stop()
-                                popup.close()
-                                flag1 = 0
+                                if(drawerStatus == false){
+                                    holdTimer1.stop()
+                                    popup.close()
+                                    flag1 = 0
+                                }
                             }
                         }
                     }
@@ -747,14 +759,18 @@ Item {
                             }
 
                             onEntered:{
-                                flag1 = 5
-                                holdTimer1.start()
+                                if(drawerStatus == false){
+                                    flag1 = 5
+                                    holdTimer1.start()
+                                }
                             }
 
                             onExited: {
-                                holdTimer1.stop()
-                                popup.close()
-                                flag1 = 0
+                                if(drawerStatus == false){
+                                    holdTimer1.stop()
+                                    popup.close()
+                                    flag1 = 0
+                                }
                             }
                         }
                     }
@@ -762,8 +778,6 @@ Item {
                 }
             }
         }
-
-
 
         Popup {
             id: popup
@@ -785,6 +799,7 @@ Item {
                 }
             }
         }
+
         Dashboard{
             id: dashboard
             width: (drawerStatus == true) ? content.width*0.82 : content.width*0.95
@@ -800,6 +815,8 @@ Item {
 
             generatereportmousearea.onClicked: {
                 if(QGroundControl.multiVehicleManager.vehicles.count>0){
+                    dashTimer.stop()
+                    missionhistory.loadMissionHistory()
                     missionhistory.visible = true
                     missionhistory.enabled = true
                     mainRect.visible = false

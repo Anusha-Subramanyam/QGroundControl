@@ -11,6 +11,8 @@ QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in mak
 QMAKE_CXXFLAGS += /Wv:18
 LIBS += -lcrypto
 
+#LIBS += -L"D:/SQLCipher/Plugin_SqlCipher/QtCipherSqlitePlugin/build/plugins/sqldrivers/sqlitecipher.lib" -lsqlitecipher
+
 # These are disabled until proven correct
 DEFINES += QGC_GST_TAISYNC_DISABLED
 DEFINES += QGC_GST_MICROHARD_DISABLED
