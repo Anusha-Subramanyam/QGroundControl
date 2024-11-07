@@ -2,7 +2,6 @@
 #define DATABASE_H
 
 #include <QObject>
-#include <QSqlDatabase>
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
@@ -11,6 +10,8 @@
 #include <QStringList>
 #include <QList>
 #include <QSqlRecord>
+#include <sqlite3.h>
+#include <sqlcipher.h>
 
 class Database : public QObject
 {
@@ -24,16 +25,21 @@ public:
         }
         return instance;
     }
+    QVector<QVector<QString>> userData;
     QVector<USER_DETAILS> userInfo;
 
-    // ~Database();
+
+    ~Database();
 
     QString sessId = "";
     QString currentUser = "";
 
     int8_t createDatabase(QString templatePath);
     int8_t initDB();
-    int8_t openDB();
+    bool openDB();
+    int8_t entriesInDb(QString countQuery, QString tableName);
+    int8_t executeQuery(QString sqlStmt);
+    int8_t listOfTablesInDb();
     bool ReadDataDB();
     void setSessionLogin(QString id, QString user, QString timeStmp);
     Q_INVOKABLE void setSessionLogout();
@@ -67,13 +73,18 @@ signals:
 private:
     static Database *instance;
 
-    QSqlDatabase dbase;
+    sqlite3 *db=nullptr;
+    //QSqlDatabase dbase;
     // QString UserID;
     //QString roleID;
     // QString RoleName;
 
-    USER_DETAILS userData;
-
+    //USER_DETAILS userData;
+    QList<QString> tables;
+    QVector<QString> columsVec;
+    QVector<QVector<QString>> mainVec;
+    const char *zErrMsg = 0;
+    char *zErrMsg2 = 0;
 };
 
 #endif // DATABASE_H

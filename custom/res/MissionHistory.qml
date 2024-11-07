@@ -14,6 +14,7 @@ import QGroundControl.FactControls  1.0
 import QGroundControl.Controls      1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.Controllers   1.0
+import QtQuick.Dialogs 1.3
 
 Item {
 
@@ -184,7 +185,7 @@ Item {
 
                 Text {
                     id: vecid
-                    text: qsTr("Vehicle ID : " ,_activevechile.id )
+                    text: qsTr("Vehicle ID" /*,_activevechile.id*/ )
                     anchors.top: parent.top
                     anchors.left: parent.left
                     font.pixelSize: parent.width*0.05
@@ -193,7 +194,7 @@ Item {
                 }
                 Text {
                     id: vectype
-                    text: qsTr("Vehicle Type : " ,_activevechile.vehicleTypeString)
+                    text: qsTr("Vehicle Type"/* ,_activevechile.vehicleTypeString*/)
                     anchors.top: vecid.bottom
                     anchors.left: parent.left
                     font.pixelSize: parent.width*0.05
@@ -201,13 +202,30 @@ Item {
                     anchors.topMargin: parent.width*0.03
                 }
 
+                Text {
+                    id: vecdataid
+                    text: qsTr(" : "+_activevechile.id.toString() )
+                    anchors.top: parent.top
+                    anchors.left: vectype.right
+                    font.pixelSize: parent.width*0.05
+                    color: qgcPal.text
 
+                }
+                Text {
+                    id: vectypedata
+                    text: qsTr(" : "+_activevechile.vehicleTypeString)
+                    anchors.top: vecid.bottom
+                     anchors.left: vectype.right
+                    font.pixelSize: parent.width*0.05
+                    color: qgcPal.text
+                    anchors.topMargin: parent.width*0.03
+                }
 
             }
 
             Rectangle{
                 id: rect23
-                width: parent.width*0.23
+                width: parent.width*0.15
                 height: parent.height*0.08
                 color: "transparent"
                 radius: 6
@@ -216,27 +234,48 @@ Item {
                 anchors.top:heading.bottom
                 anchors.topMargin: parent.height*0.035
                 anchors.left: parent.left
-                anchors.leftMargin: 1600
+                anchors.leftMargin: parent.width*0.82
 
                 Text {
                     id: firmwaretypeid
-                    text: qsTr("Firmware Type : ", _activevechile.firmwareTypeString)
+                    text: qsTr("Firmware Type"/*, _activevechile.firmwareTypeString*/)
                     anchors.top: parent.top
                     anchors.left: parent.left
-                    font.pixelSize: parent.width*0.05
+                    font.pixelSize: vehData.width*0.05
                     color: qgcPal.text
 
                 }
                 Text {
                     id: noofmission
-                    text: qsTr("No. of Mission : ",tableviewcomp.model.rowCount() )
+                    text: qsTr("No. of Mission"/*,tableviewcomp.model.rowCount()*/ )
                     anchors.top: firmwaretypeid.bottom
                     anchors.left: parent.left
-                    font.pixelSize: parent.width*0.05
+                    font.pixelSize: vehData.width*0.05
                     color: qgcPal.text
                     anchors.topMargin: parent.width*0.03
 
                 }
+                Text {
+                    id: firmwaretypedata
+                    text: qsTr(" : "+_activevechile.firmwareTypeString)
+                    anchors.top: parent.top
+                    anchors.left: firmwaretypeid.right
+                    font.pixelSize: vehData.width*0.05
+                    color: qgcPal.text
+
+                }
+                Text {
+                    id: noofmissiondata
+                    // text: qsTr(" : "+tableviewcomp.model.rowCount())
+                    anchors.top: firmwaretypeid.bottom
+                    anchors.left: firmwaretypeid.right
+                    font.pixelSize: vehData.width*0.05
+                    color: qgcPal.text
+                    anchors.topMargin: parent.width*0.03
+
+                }
+
+
             }
 
             ListModel {
@@ -378,6 +417,32 @@ Item {
                                 height: parent.height
                                 color: "transparent"
 
+                                FileDialog {
+                                             id: fileDialog
+                                             title: "Choose a location to save the file"
+                                             folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation) // Start in the user's Documents folder
+                                             nameFilters: [
+                                                 "JSON files (*.json)",
+                                                 "PDF files (*.pdf)",
+                                                 "CSV files (*.csv)",
+                                                 "All files (*)"
+                                             ]
+                                             selectExisting: false // Allow selecting a new file for saving
+
+                                             onAccepted: {
+                                                 var fileUrl = fileDialog.fileUrl;
+                                                 var filePath = decodeURIComponent(fileUrl).replace("file:///", "");
+                                                 console.log("Save button clicked. Decoded file path: " + filePath);
+
+                                                 // Call the C++ function to save JSON data
+                                                 opCls.saveToFile(filePath,_activevechile.id.toString());
+                                             }
+
+                                             onRejected: {
+                                                 console.log("Dialog canceled. No file selected.");
+                                             }
+                                         }
+
                                 Image {
                                     source:  "/custom/img/download.png"
                                     height: parent.height*.9
@@ -399,7 +464,7 @@ Item {
                                     }
 
                                     onClicked: {
-
+                                        fileDialog.open()
                                     }
 
 

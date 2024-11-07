@@ -1,6 +1,7 @@
 #ifndef HANDLEOPERATIONS_H
 #define HANDLEOPERATIONS_H
 
+
 #include <QObject>
 #include <QDebug>
 #include <QFile>
@@ -21,6 +22,28 @@
 #include "UserRoleModel.h"
 #include "CryptoOperations.h"
 #include "RolePermissionModel.h"
+//#include "CustomPlugin.h"
+#include "QGCToolbox.h"
+#include <QPdfWriter>
+#include <QPainter>
+#include <QFile>
+#include <QTextStream>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QDebug>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QFile>
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
+#include <QDir>
+#include <QDebug>
+
+// Include the required headers
+
 
 class HandleOperations : public QObject
 {
@@ -31,9 +54,11 @@ public:
     static HandleOperations *getInstance(){
         if(!instance){
             instance = new HandleOperations();
+
         }
         return instance;
     }
+
 
     QString sessionID = "";
     QString currentUser = "";
@@ -53,6 +78,15 @@ public:
     Q_INVOKABLE bool deleteRoleConfigfile(QString roleid);
     Q_INVOKABLE QStringList getInitialRoles();
 
+    Q_INVOKABLE void saveToFile(const QString &filePath,QString id);
+    void saveJsonToFile(QFile &file,QStringList reportdata);
+    void saveCsvToFile(QFile &file,QStringList reportdata) ;
+    void savePdfToFile(QString filepath,QStringList reportdata);
+
+    //eventlog
+    Q_INVOKABLE void writeDataToFile(const QStringList& dataList);
+
+
 public slots:
     void getPermissions(QString roleId);
     void inactivityTimeout();
@@ -65,7 +99,7 @@ protected:
 
 private:
     static HandleOperations *instance;
-
+    //MultiVehicleManager *m_manager = new MultiVehicleManager(qgcApp(),qgcApp()->toolbox());
     Database *db = Database::getInstance();
     UserRoleModel *roleModel = UserRoleModel::getInstance();
     CryptoOperations *crypto = CryptoOperations::getInstance();
@@ -80,6 +114,8 @@ private:
     QTimer inactTimer;
     QElapsedTimer elapsedTime;
     uint16_t intactInterval = 20;
+
+
 
     QByteArray configFileData;
     QStringList rolenames;

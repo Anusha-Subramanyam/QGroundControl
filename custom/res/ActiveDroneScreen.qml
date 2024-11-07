@@ -19,6 +19,8 @@ Item {
     signal droneSelected()
     QGCPalette { id: qgcPal }
 
+     property var _activeVeh: QGroundControl.multiVehicleManager.activeVehicle
+     property var sensorvalue: _activeVeh.sysStatusSensorInfo.sensorStatus
     Connections {
         target: QGroundControl.multiVehicleManager.vehicles
         onCountChanged:{
@@ -49,6 +51,93 @@ Item {
 
             droneModel.append({vehid: vehicle.id , firmtype: vehicle.firmwareTypeString ,vehtype: vehicle.vehicleTypeString, selected: "/custom/img/DroneUnselectIcon.png"})
         }
+    }
+    Timer {
+           id: dataTimer
+           interval: 1000
+           repeat: true
+           running: false
+
+           onTriggered: {
+                var paramdata = []
+                paramdata =  getdata()
+               console.log("Timer function............................")
+             if(_activeVeh){
+             opCls.writeDataToFile(paramdata)
+             }else{
+                dataTimer.stop()
+             }
+             console.log("Timer stop............................")
+           }
+       }
+
+    function getdata(){
+        var paramList = [];
+         console.log("get data............................")
+        paramList.push(_activeVeh.id.toString())
+        paramList.push(_activeVeh.vehicleTypeString)
+        paramList.push(_activeVeh.firmwareTypeString)
+        paramList.push(_activeVeh.latitude.toString())
+        paramList.push(_activeVeh.longitude.toString())
+        paramList.push(_activeVeh.altitudeAboveTerr.value)
+        paramList.push(QGroundControl.gpsRtk.numSatellites.value)
+        paramList.push(_activeVeh.gps.hdop.value)
+        paramList.push(_activeVeh.heading.value)
+        paramList.push(_activeVeh.airSpeed.value)
+        paramList.push(_activeVeh.groundSpeed.value)
+        paramList.push(_activeVeh.batteries.get(0).voltage.value)
+        paramList.push(_activeVeh.batteries.get(0).current.value)
+        paramList.push(_activeVeh.batteries.get(0).temperature.value)
+        paramList.push(_activeVeh.batteries.get(0).percentRemaining.value)
+        paramList.push(_activeVeh.flightMode.toString())
+        paramList.push(_activeVeh.homePosition)
+        paramList.push(_activeVeh.distanceToHome.value)
+        paramList.push(_activeVeh.altitudeAboveTerr.value)
+        paramList.push(_activeVeh.altitudeRelative.value)
+        paramList.push(_activeVeh.rcRSSI.toString())
+        paramList.push(_activeVeh.vehicleLinkManager.communicationLost.toString())
+        paramList.push(sensorvalue[0])
+        paramList.push(sensorvalue[1])
+        paramList.push(sensorvalue[2])
+        paramList.push(sensorvalue[3])
+        paramList.push(sensorvalue[4])
+        paramList.push(sensorvalue[5])
+        paramList.push(sensorvalue[6])
+        paramList.push(sensorvalue[7])
+        paramList.push(sensorvalue[8])
+        paramList.push(sensorvalue[9])
+        paramList.push(sensorvalue[10])
+        paramList.push(sensorvalue[11])
+        paramList.push(sensorvalue[12])
+        paramList.push(sensorvalue[13])
+        paramList.push(sensorvalue[14])
+        paramList.push(sensorvalue[15])
+        paramList.push(sensorvalue[16])
+
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("aditya")
+        // paramList.push("Aditya")
+        console.log("get data before return............................")
+        return paramList;
     }
 
     Rectangle{
@@ -392,6 +481,11 @@ Item {
                         var vehicle = QGroundControl.multiVehicleManager.getVehicleById(model.vehid);
                         QGroundControl.multiVehicleManager.activeVehicle = vehicle;
                         droneSelected();
+                        if(dataTimer.running){
+                            dataTimer.stop()
+                        }
+
+                        dataTimer.start();
                     }
                 }
 

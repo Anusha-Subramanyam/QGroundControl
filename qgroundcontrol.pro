@@ -10,7 +10,30 @@
 QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in makefiles
 QMAKE_CXXFLAGS += /Wv:18
 LIBS += -lcrypto
+#LIBS += -lsqlite3
 
+INCLUDEPATH += "D:/Cipherrrrrr/sqlcipher/src"
+
+# LIBS += -L"C:/Program Files/OpenSSL-Win64/lib/VC/x64/MT" -llibssl_static
+# LIBS += -L"C:/Program Files/OpenSSL-Win64/lib/VC/x64/MT" -llibcrypto_static
+LIBS += -L"D:/Cipherrrrrr/sqlcipher" -lsqlite3
+
+#include(D:/Cipherrrrrr/sqlcipher)
+
+#SQLCIPHER_PATH = D:/Cipherrrrrr/sqlcipher
+#INCLUDEPATH += D:/Cipherrrrrr/sqlcipher
+#LIBS += -L"D:\Cipherrrrrr\sqlcipher" -lsqlitecipher
+
+#LIBS += -L$$SQLCIPHER_PATH -lsqlcipher
+
+# # Ensure the plugin path is set for runtime
+#QMAKE_RPATHDIR += D:\Cipherrrrrr\sqlcipher
+
+# Include path
+#INCLUDEPATH += D:/Cipher/sqlcipher/include
+
+# Link the static library
+#LIBS += -L"D:/Cipher/sqlcipher/sqlite3.lib" -lsqlcipher
 #LIBS += -L"D:/SQLCipher/Plugin_SqlCipher/QtCipherSqlitePlugin/build/plugins/sqldrivers/sqlitecipher.lib" -lsqlitecipher
 
 # These are disabled until proven correct

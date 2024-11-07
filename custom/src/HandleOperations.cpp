@@ -384,3 +384,255 @@ void HandleOperations::inactivityTimeout()
     }
 }
 
+void HandleOperations::saveToFile(const QString &filePath,QString id)
+{
+    QFile file(filePath);
+    QString fileExtension = QFileInfo(filePath).suffix();
+    QVariant  datafromdb = db->readMissionHistory(id,true);
+    // Extract the QVariantList from the QVariant
+    QVariantList dataList = datafromdb.toList();
+    QStringList extractedData = {};
+
+    // Check if the list contains at least one element and that the first element is a QStringList
+    if (!dataList.isEmpty() && dataList.first().canConvert<QStringList>()) {
+        // Extract the QStringList from the first QVariant in the list
+        extractedData = dataList.first().toStringList();
+
+        // Now you can access each element in the QStringList as needed
+         qDebug()<<"..................................................";
+        qDebug() <<"extractedData"<< extractedData;
+          qDebug()<<"..................................................";
+    } else {
+        qDebug() << "Data format is not as expected.";
+    }
+
+
+    QVariantList reportdata = {"1","Ardino","firmware","24hrs"};
+    qDebug()<<"Report Data"<<reportdata;
+    if (fileExtension == "json") {
+        saveJsonToFile(file,extractedData);
+    } else if (fileExtension == "csv") {
+        saveCsvToFile(file,extractedData);
+    } else if (fileExtension == "pdf") {
+        // saveCsvToFile(file,reportdata);
+        savePdfToFile(filePath,extractedData);
+    } else {
+        qDebug() << "Unsupported file format!";
+    }
+}
+
+void HandleOperations::saveJsonToFile(QFile &file,QStringList reportdata)
+{
+    // Create a JSON object
+
+    QJsonObject jsonObject;
+    jsonObject["VehicleID"] = QJsonValue::fromVariant(reportdata[0]);
+    jsonObject["VehicleType"] = QJsonValue::fromVariant(reportdata[1]);
+    jsonObject["FirmwareType"] =QJsonValue::fromVariant(reportdata[2]);
+    jsonObject["MissionID "] = QJsonValue::fromVariant(reportdata[3]);
+    jsonObject["MissionTime"] = QJsonValue::fromVariant(reportdata[4]);
+    jsonObject["MissionDistance"] = QJsonValue::fromVariant(reportdata[5]);
+    jsonObject["Latitude"] = QJsonValue::fromVariant(reportdata[6]);
+    jsonObject["Longitude"] = QJsonValue::fromVariant(reportdata[7]);
+    jsonObject["Altitude"] = QJsonValue::fromVariant(reportdata[8]);
+    jsonObject["NumberOfSatellites"] = QJsonValue::fromVariant(reportdata[9]);
+    jsonObject["HDOP"] = QJsonValue::fromVariant(reportdata[10]);
+    jsonObject["CompassHeading"] = QJsonValue::fromVariant(reportdata[11]);
+    jsonObject["Airspeed"] = QJsonValue::fromVariant(reportdata[12]);
+    jsonObject["GroundSpeed"] = QJsonValue::fromVariant(reportdata[13]);
+    jsonObject["BatteryVoltage"] = QJsonValue::fromVariant(reportdata[14]);
+    jsonObject["BatteryCurrentDraw"] = QJsonValue::fromVariant(reportdata[15]);
+    jsonObject["RemainingBatteryPercentage"] = QJsonValue::fromVariant(reportdata[16]);
+    jsonObject["BatteryTemperature"] = QJsonValue::fromVariant(reportdata[17]);
+    jsonObject["HomePosition"] = QJsonValue::fromVariant(reportdata[18]);
+    jsonObject["DistancefromHome"] = QJsonValue::fromVariant(reportdata[19]);
+    jsonObject["WindDirection"] = QJsonValue::fromVariant(reportdata[20]);
+    jsonObject["WindSpeed"] = QJsonValue::fromVariant(reportdata[21]);
+    jsonObject["WindVerticalSpeed"] = QJsonValue::fromVariant(reportdata[22]);
+    jsonObject["Temperature "] = QJsonValue::fromVariant(reportdata[23]);
+    jsonObject["AbsoluteAltitude"] = QJsonValue::fromVariant(reportdata[24]);
+    jsonObject["RelativeAltitude"] = QJsonValue::fromVariant(reportdata[25]);
+    jsonObject["SignalStrength"] = QJsonValue::fromVariant(reportdata[26]);
+    jsonObject["CurrentDateAndTime"] = QJsonValue::fromVariant(reportdata[27]);
+
+    // Convert the JSON object to a string
+    QJsonDocument jsonDoc(jsonObject);
+    QString jsonString = jsonDoc.toJson(QJsonDocument::Indented);
+
+    // Write JSON data to file
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << jsonString;
+        file.close();
+        qDebug() << "JSON data successfully written to: " << file.fileName();
+    } else {
+        qDebug() << "Failed to open or create JSON file for writing: " << file.fileName();
+    }
+}
+
+void HandleOperations::saveCsvToFile(QFile &file,QStringList reportdata)
+{
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        // Write CSV header
+        out << "VehicleID,VehicleType,FirmwareType,MissionID,MissionTime,MissionDistance,Latitude,Longitude,Altitude,NumberOfSatellites,HDOP,CompassHeading,Airspeed,GroundSpeed,BatteryVoltage,BatteryCurrentDraw,RemainingBatteryPercentage,BatteryTemperature,HomePosition,DistancefromHome,WindDirection,WindSpeed,WindVerticalSpeed,Temperature,AbsoluteAltitude,RelativeAltitude,SignalStrength,CurrentDateAndTime\n";
+        out<<reportdata[0]+","+reportdata[1]+","+reportdata[2]+","+reportdata[3]+","+reportdata[4]+","+reportdata[5]+","+reportdata[6]+","+reportdata[7]+","+reportdata[8]+","+reportdata[9]+","+reportdata[10]+","+reportdata[11]+","+reportdata[12]+","+reportdata[13]+","+reportdata[14]+","+reportdata[15]+","+reportdata[16]+","+reportdata[17]+","+reportdata[18]+","+reportdata[19]+","+reportdata[20]+","+reportdata[21]+","+reportdata[22]+","+reportdata[23]+","+reportdata[24]+","+reportdata[25]+","+reportdata[26]+","+reportdata[27]+"\n";
+
+        file.close();
+        qDebug() << "CSV data successfully written to:" << file.fileName();
+    } else {
+        qWarning() << "Failed to open or create CSV file for writing:" << file.fileName();
+    }
+}
+
+void HandleOperations::savePdfToFile(QString filepath,QStringList reportdata)
+{
+    // Ensure the file path is valid and use it to create a PDF writer
+    QString filePath = filepath;
+    if (filePath.isEmpty()) {
+        qWarning() << "No file path provided!";
+        return;
+    }
+
+    // Initialize QPdfWriter with the file path
+    QPdfWriter pdfWriter(filePath);
+    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setResolution(300);
+
+    QPainter painter(&pdfWriter);
+    if (!painter.isActive()) {
+        qWarning() << "Could not initialize PDF painter!";
+        return;
+    }
+
+
+    int yPosition = 100;
+    const int lineSpacing = 50;
+    painter.setFont(QFont("Arial", 12));
+
+    painter.drawText(100, yPosition, "Report Data:");
+    yPosition += lineSpacing;
+
+    // for (const QVariant &data : reportdata) {
+    //     painter.drawText(100, yPosition, data.toString());
+    //     yPosition += lineSpacing;
+    // }
+
+    painter.end(); // Finalize the PDF document
+    qDebug() << "PDF successfully created at:" << filePath;
+}
+
+void HandleOperations::writeDataToFile(const QStringList &dataList)
+{
+
+
+    QString filePath = "C:/QGCClone/QGroundControl/custom/Output.txt"; // Define your output file path here
+    QFile file(filePath);
+
+    // Open the file to read existing lines
+    QStringList existingLines;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            existingLines << in.readLine();
+        }
+        file.close();
+    }
+
+
+
+    // real data should be store in that mannar
+    QString canInfo = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")+
+                      " VehicleID "+dataList[0]+
+                      " VehicleType "+dataList[1]+
+                      " FirmwareType "+dataList[2]+
+                      " Latitude "+dataList[3]+
+                      " Longitude "+dataList[4]+
+                      " Altitude "+dataList[5]+
+                      " NumberOfSatellites "+dataList[6]+
+                      " HDOP "+dataList[7]+
+                      " CompassHeading "+dataList[8]+
+                      " Airspeed "+dataList[9]+
+                      " GroundSpeed "+dataList[10]+
+                      " BatteryVoltage "+dataList[11]+
+                      " BatteryCurrentDraw "+dataList[12]+
+                      " RemainingBatteryPercentage "+dataList[13]+
+                      " BatteryTemperature "+dataList[14]+
+                      " FlightMode "+dataList[15]+
+                      " HomePosition "+dataList[16]+
+                      " DistancefromHome "+dataList[17]+
+                      " AbsoluteAltitude "+dataList[18]+
+                      " RelativeAltitude "+dataList[19]+
+                      " SignalStrength "+dataList[20]+
+                      " CommunicationLoss "+dataList[21]+
+                      " Gyro "+dataList[22]+
+                      " Accelerometer "+dataList[23]+
+                      " Magnetometer "+dataList[24]+
+                      " Absolute pressure "+dataList[25]+
+                      " Angular rate control "+dataList[26]+
+                      " Attitude stabilization "+dataList[27]+
+                      " Yaw position "+dataList[28]+
+                      " Motor outputs /control "+dataList[29]+
+                      " AHRS "+dataList[30]+
+                      " Terrain "+dataList[31]+
+                      " Battery "+dataList[32]+
+                      " Propulsion "+dataList[33]+
+                      " Z/altitude control "+dataList[34]+
+                      " X/Y position control "+dataList[35]+
+                      " GeoFence "+dataList[36]+
+                      " Logging "+dataList[37]+
+                      " Pre-Arm Check "+dataList[38];
+
+
+    // Add the new data line
+    qDebug()<<"before if condition.........................";
+    // if(m_manager->activeVehicle()){
+    // qDebug()<<".....................................";
+    // qDebug()<<"Testing start.........................";
+    // qDebug()<<m_manager->activeVehicle()->id();
+    // qDebug()<<m_manager->activeVehicle()->vehicleType();
+    // qDebug()<<m_manager->activeVehicle()->firmwareType();
+    // qDebug()<<m_manager->activeVehicle()->latitude();
+    // qDebug()<<m_manager->activeVehicle()->longitude();
+    // qDebug()<<m_manager->activeVehicle()->altitudeAboveTerr();
+    // qDebug()<<m_manager->activeVehicle()->altitudeAMSL();
+    // qDebug()<<m_manager->activeVehicle()->;
+    // qDebug()<<"Testing end.........................";
+    // qDebug()<<".....................................";
+    // }else{
+    //     qDebug()<<"vehicle is not connected................";
+    // }
+    qDebug()<<"after if condition.........................";
+
+    qDebug()<<"before inserting into the file.........................";
+    QString dataLine = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + " - " + dataList.join(", ");
+    existingLines.append(canInfo); // Add the new line to the end of the list
+
+    // Check if we need to remove the oldest line
+    qDebug()<<".......................................................";
+    qDebug()<<".......................................................";
+    qDebug()<<"line count"<<existingLines.size();
+    qDebug()<<"line count"<<existingLines.count();
+    qDebug()<<".......................................................";
+    qDebug()<<".......................................................";
+    while (existingLines.size() > 100) {
+        existingLines.removeFirst(); // Remove the oldest line
+    }
+
+     qDebug()<<"before writing the file.........................";
+    // Now write the updated lines back to the file
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        for (const QString& line : qAsConst(existingLines)) {
+            out << line << "\n"; // Write each line back to the file
+        }
+        file.close();
+    } else {
+        qWarning() << "Unable to open file for writing.";
+    }
+
+}
+
+
